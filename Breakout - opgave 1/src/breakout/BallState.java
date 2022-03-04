@@ -16,6 +16,7 @@ public class BallState {
 	 * 
 	 * @pre | center != null
 	 * @pre | velocity != null
+	 * @pre | diameter >= 0
 	 * 
 	 * @post | getCenter() == center
 	 * @post | getDiameter() == diameter

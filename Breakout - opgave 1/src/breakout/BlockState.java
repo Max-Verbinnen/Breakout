@@ -15,6 +15,7 @@ public class BlockState {
 	 * 
 	 * @pre | topLeft != null
 	 * @pre | bottomRight != null
+	 * @pre | topLeft.isUpAndLeftFrom(bottomRight)
 	 * 
 	 * @post | getTopLeft() == topLeft
 	 * @post | getBottomRight() == bottomRight
