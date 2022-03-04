@@ -2,15 +2,41 @@ package breakout;
 
 import java.util.Arrays;
 
-// TODO: implement, document
+/**
+ * Represents the state of the breakout game
+ * 
+ * @invar | getBalls() != null
+ * @invar | getBlocks() != null
+ * @invar | getPaddle() != null
+ * @invar | getBottomRight() != null
+ */
 public class BreakoutState {
-	
+	/**
+	 * @invar | balls != null
+	 * @invar | blocks != null
+	 * @invar | bottomRight != null
+	 * @invar | paddle != null
+	 * 
+	 * @representationObject (dit geldt voor alle 4)
+	 */
 	private BallState[] balls;
 	private BlockState[] blocks;
 	private Point bottomRight;
 	private PaddleState paddle;
  
-	
+	/**
+	 * Initializes this object so that it stores the balls, blocks, bottomRight & paddle objects.
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		  | balls == null || blocks == null || bottomRight == null || paddle == null
+	 * 
+	 * @post  | Arrays.equals(getBalls(), balls)
+	 * @post  | Arrays.equals(getBlocks(), blocks)
+	 * @post  | getBottomRight() == bottomRight
+	 * @post  | getPaddle() == paddle
+	 * 
+	 * @inspects | balls, blocks, bottomRight, paddle
+	 */
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
 		if (balls == null || blocks == null || bottomRight == null || paddle == null) {
 			throw new IllegalArgumentException("Not a valid argument.");
@@ -22,18 +48,34 @@ public class BreakoutState {
 		this.paddle = paddle;
 	}
 	
+	/**
+	 * Returns the sequence of balls that are currently in the game.
+	 * 
+	 * @creates | result
+	 */
 	public BallState[] getBalls() {
 		return balls.clone();
 	}
-
+	
+	/**
+	 * Returns the sequence of blocks that are shown on the screen.
+	 * 
+	 * @creates | result
+	 */
 	public BlockState[] getBlocks() {
 		return blocks.clone();
 	}
-
+	
+	/**
+	 * Returns the paddle object.
+	 */
 	public PaddleState getPaddle() {
 		return paddle;
 	}
 
+	/**
+	 * Returns the bottom right coordinate (as a Point).
+	 */
 	public Point getBottomRight() {
 		return bottomRight;
 	}
@@ -91,10 +133,24 @@ public class BreakoutState {
 		paddle = new PaddleState(paddle.getCenter().minus(new Vector(10, 0)));
 	}
 	
+	/**
+	 * Returns whether game is won
+	 * 
+	 * @post | result == (getBalls().length >= 1 && getBlocks().length == 0)
+	 * 
+	 * @inspects | this
+	 */
 	public boolean isWon() {
 		return balls.length >= 1 && blocks.length == 0;
 	}
-
+	
+	/**
+	 * Returns whether player has died
+	 * 
+	 * @post | result == (getBalls().length == 0)
+	 * 
+	 * @inspects | this
+	 */
 	public boolean isDead() {
 		return balls.length == 0;
 	}
