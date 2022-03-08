@@ -11,23 +11,23 @@ public class GameMap {
 	private static int BLOCK_COLUMNS = 10;
 	private static final Vector INIT_BALL_VELOCITY = new Vector(5,7);
 
-	private static BlockState createBlock(Point bottomLeft) {
+	private static BlockState createBlock(Point topLeft) {
 		Vector marginBL = new Vector(20,20);
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS-70,HEIGHT/BLOCK_LINES-70);
-		Point blockTL = bottomLeft.plus(marginBL);
+		Point blockTL = topLeft.plus(marginBL);
 		Point blockBR = blockTL.plus(size);
 
 		return new BlockState(blockTL, blockBR);
 	}
-	private static PaddleState createPaddle(Point bottomLeft) {
+	private static PaddleState createPaddle(Point topLeft) {
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
-		Point center = bottomLeft.plus(size);
+		Point center = topLeft.plus(size);
 
 		return new PaddleState(center);
 	}
-	private static BallState createBall(Point bottomLeft) {
+	private static BallState createBall(Point topLeft) {
 		Vector centerD = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
-		Point center = bottomLeft.plus(centerD);
+		Point center = topLeft.plus(centerD);
 		int diameter = INIT_BALL_DIAMETER;
 		
 		return new BallState(center, diameter, INIT_BALL_VELOCITY);
@@ -48,9 +48,9 @@ public class GameMap {
 		PaddleState paddle = null;
 		
 		Point topLeft = new Point(0,0);
-		assert lines.length < BLOCK_LINES;
+		assert lines.length <= BLOCK_LINES;
 		for(String line : lines) {
-			assert line.length() < BLOCK_COLUMNS;
+			assert line.length() <= BLOCK_COLUMNS;
 			Point cursor = topLeft;
 			for(char c : line.toCharArray()) {
 				switch(c) {
@@ -62,8 +62,8 @@ public class GameMap {
 			}
 			topLeft = topLeft.plus(unitVecDown);
 		}
-		Point topRight = new Point(WIDTH, HEIGHT);
+		Point bottomRight = new Point(WIDTH, HEIGHT);
 		
-		return new BreakoutState(balls.toArray(new BallState[] {}), blocks.toArray(new BlockState[] {}), topRight, paddle);
+		return new BreakoutState(balls.toArray(new BallState[] {}), blocks.toArray(new BlockState[] {}), bottomRight, paddle);
 	}
 }
