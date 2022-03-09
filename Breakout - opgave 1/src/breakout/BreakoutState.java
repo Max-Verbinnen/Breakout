@@ -9,6 +9,13 @@ import java.util.Arrays;
  * @invar | getBlocks() != null
  * @invar | getPaddle() != null
  * @invar | getBottomRight() != null
+ * 
+ * @invar | Arrays.stream(getBalls()).allMatch(ball -> ball != null)
+ * @invar | Arrays.stream(getBlocks()).allMatch(block -> block != null)
+ * 
+ * @invar | Arrays.stream(getBalls()).allMatch(ball -> ball.getCenter().getX() >= 0 && ball.getCenter().getX() <= getBottomRight().getX() && ball.getCenter().getY() >= 0 && ball.getCenter().getY() <= getBottomRight().getY())
+ * @invar | Arrays.stream(getBlocks()).allMatch(block -> block.getTopLeft().getX() >= 0 && block.getTopLeft().getX() <= getBottomRight().getX() && block.getTopLeft().getY() >= 0 && block.getTopLeft().getY() <= getBottomRight().getY() && block.getBottomRight().getX() >= 0 && block.getBottomRight().getX() <= getBottomRight().getX() && block.getBottomRight().getY() >= 0 && block.getBottomRight().getY() <= getBottomRight().getY())
+ * @invar | getPaddle().getCenter().getX() + getPaddle().getWidth() / 2 <= getBottomRight().getX() && getPaddle().getCenter().getX() - getPaddle().getWidth() / 2 >= 0
  */
 public class BreakoutState {
 	/**
@@ -16,6 +23,13 @@ public class BreakoutState {
 	 * @invar | blocks != null
 	 * @invar | bottomRight != null
 	 * @invar | paddle != null
+	 * 
+	 * @invar | Arrays.stream(balls).allMatch(ball -> ball != null)
+	 * @invar | Arrays.stream(blocks).allMatch(block -> block != null)
+	 * 
+	 * @invar | Arrays.stream(balls).allMatch(ball -> ball.getCenter().getX() >= 0 && ball.getCenter().getX() <= bottomRight.getX() && ball.getCenter().getY() >= 0 && ball.getCenter().getY() <= bottomRight.getY())
+	 * @invar | Arrays.stream(blocks).allMatch(block -> block.getTopLeft().getX() >= 0 && block.getTopLeft().getX() <= bottomRight.getX() && block.getTopLeft().getY() >= 0 && block.getTopLeft().getY() <= bottomRight.getY() && block.getBottomRight().getX() >= 0 && block.getBottomRight().getX() <= bottomRight.getX() && block.getBottomRight().getY() >= 0 && block.getBottomRight().getY() <= bottomRight.getY())
+	 * @invar | paddle.getCenter().getX() + paddle.getWidth() / 2 <= bottomRight.getX() && paddle.getCenter().getX() - paddle.getWidth() / 2 >= 0
 	 * 
 	 * @representationObject (dit geldt voor alle 4)
 	 */

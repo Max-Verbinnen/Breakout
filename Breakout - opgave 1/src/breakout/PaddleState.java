@@ -4,10 +4,21 @@ package breakout;
  * This class represents the state of the paddle.
  * 
  * @immutable
+ * 
+ * @invar | getCenter() != null
+ * @invar | getWidth() > 0
+ * @invar | getHeight() > 0
  */
 public class PaddleState {
-
+	/**
+	 * @invar | center != null
+	 * @invar | WIDTH > 0
+	 * @invar | HEIGHT > 0
+	 * 
+	 * @representationObject (geldt enkel voor center)
+	 */
 	private final Point center;
+
 	private final int WIDTH = 5500;
 	private final int HEIGHT = 800;
 	

@@ -4,9 +4,19 @@ package breakout;
  * This class represents the state of the block.
  * 
  * @immutable
+ * 
+ * @invar | getTopLeft() != null
+ * @invar | getBottomRight() != null
+ * @invar | getTopLeft().isUpAndLeftFrom(getBottomRight())
  */
 public class BlockState {
-
+	/**
+	 * @invar | topLeft != null
+	 * @invar | bottomRight != null
+	 * @invar | topLeft.isUpAndLeftFrom(bottomRight)
+	 * 
+	 * @representationObject
+	 */
 	private final Point topLeft;
 	private final Point bottomRight;
 	

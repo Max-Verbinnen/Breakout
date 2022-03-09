@@ -4,19 +4,29 @@ package breakout;
  * This class represents the state of the ball.
  * 
  * @immutable
+ * 
+ * @invar | getCenter() != null
+ * @invar | getVelocity() != null
+ * @invar | getDiameter() > 0
  */
 public class BallState {
-
+	/**
+	 * @invar | center != null
+	 * @invar | velocity != null
+	 * @invar | diameter > 0
+	 * 
+	 * @representationObject (dit geldt voor de eerste 2)
+	 */
 	private final Point center;
-	private final int diameter;
 	private final Vector velocity;
+	private final int diameter;
 	
 	/**
 	 * Return a new BallState with a center, diameter and velocity.
 	 * 
 	 * @pre | center != null
 	 * @pre | velocity != null
-	 * @pre | diameter >= 0
+	 * @pre | diameter > 0
 	 * 
 	 * @post | getCenter() == center
 	 * @post | getDiameter() == diameter
