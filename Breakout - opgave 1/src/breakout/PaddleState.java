@@ -23,7 +23,7 @@ public class PaddleState {
 	private final int HEIGHT = 800;
 	
 	/**
-	 * Return a new BlockState with a topLeft Point and bottomRight Point.
+	 * Return a new PaddleState with a given center.
 	 * 
 	 * @pre | center != null
 	 * 

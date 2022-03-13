@@ -37,14 +37,17 @@ public class BreakoutState {
 	private BlockState[] blocks;
 	private Point bottomRight;
 	private PaddleState paddle;
+	
 	private static final Vector INIT_PADDLE_VELOCITY = new Vector(10, 0);
  
 	/**
 	 * Initializes this object so that it stores the balls, blocks, bottomRight & paddle objects.
 	 * 
-	 * @throws IllegalArgumentException
-	 * 		  | balls == null || blocks == null || bottomRight == null || paddle == null
-	 * 
+	 * @throws IllegalArgumentException | balls == null
+	 * @throws IllegalArgumentException | blocks == null
+	 * @throws IllegalArgumentException | bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)
+	 * @throws IllegalArgumentException | paddle == null
+	 *  
 	 * @post  | Arrays.equals(getBalls(), balls)
 	 * @post  | Arrays.equals(getBlocks(), blocks)
 	 * @post  | getBottomRight() == bottomRight
@@ -53,9 +56,10 @@ public class BreakoutState {
 	 * @inspects | balls, blocks, bottomRight, paddle
 	 */
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
-		if (balls == null || blocks == null || bottomRight == null || paddle == null) {
-			throw new IllegalArgumentException("Not a valid argument.");
-		}
+		if(balls == null) throw new IllegalArgumentException("balls is invalid!");
+		if(blocks == null) throw new IllegalArgumentException("blocks is invalid!");
+		if(bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)) throw new IllegalArgumentException("bottomRight is invalid!");
+		if(paddle == null) throw new IllegalArgumentException("paddle is invalid!");
 
 		this.balls = balls.clone();
 		this.blocks = blocks.clone();
