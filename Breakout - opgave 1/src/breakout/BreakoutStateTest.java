@@ -66,7 +66,6 @@ class BreakoutStateTest {
 		bs4.tick(0);
 		assertEquals(topBall.getVelocity().mirrorOver(Vector.LEFT), bs4.getBalls()[0].getVelocity());
 		
-		BallState bottomBall = bs4.getBalls()[1];
 		bs4.tick(0);
 		assertTrue(bs4.getBalls().length == 1);
 		

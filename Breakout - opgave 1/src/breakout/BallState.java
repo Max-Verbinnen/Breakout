@@ -15,7 +15,7 @@ public class BallState {
 	 * @invar | velocity != null
 	 * @invar | diameter > 0
 	 * 
-	 * @representationObject (dit geldt voor de eerste 2)
+	 * @representationObject (applicable for first 2)
 	 */
 	private final Point center;
 	private final Vector velocity;

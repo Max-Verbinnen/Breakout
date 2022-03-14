@@ -31,7 +31,7 @@ public class BreakoutState {
 	 * @invar | Arrays.stream(blocks).allMatch(block -> block.getTopLeft().getX() >= 0 && block.getTopLeft().getX() <= bottomRight.getX() && block.getTopLeft().getY() >= 0 && block.getTopLeft().getY() <= bottomRight.getY() && block.getBottomRight().getX() >= 0 && block.getBottomRight().getX() <= bottomRight.getX() && block.getBottomRight().getY() >= 0 && block.getBottomRight().getY() <= bottomRight.getY())
 	 * @invar | paddle.getCenter().getX() + paddle.getWidth() / 2 <= bottomRight.getX() && paddle.getCenter().getX() - paddle.getWidth() / 2 >= 0
 	 * 
-	 * @representationObject (dit geldt voor alle 4)
+	 * @representationObject (applicable for all 4)
 	 */
 	private BallState[] balls;
 	private BlockState[] blocks;
@@ -56,10 +56,10 @@ public class BreakoutState {
 	 * @inspects | balls, blocks, bottomRight, paddle
 	 */
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
-		if(balls == null) throw new IllegalArgumentException("balls is invalid!");
-		if(blocks == null) throw new IllegalArgumentException("blocks is invalid!");
-		if(bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)) throw new IllegalArgumentException("bottomRight is invalid!");
-		if(paddle == null) throw new IllegalArgumentException("paddle is invalid!");
+		if (balls == null) throw new IllegalArgumentException("balls is invalid!");
+		if (blocks == null) throw new IllegalArgumentException("blocks is invalid!");
+		if (bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)) throw new IllegalArgumentException("bottomRight is invalid!");
+		if (paddle == null) throw new IllegalArgumentException("paddle is invalid!");
 
 		this.balls = balls.clone();
 		this.blocks = blocks.clone();
@@ -117,24 +117,11 @@ public class BreakoutState {
 					  .toArray(BallState[]::new);
 		
 		// Check whether any ball hit any block, in which case the block must be removed from the game and the ball must bounce back.
-		int deletedBlocks = 0;
 		for (int i = 0; i < blocks.length; i++) {
-			
 			int[] collidedBalls = (new Rectangle(blocks[i].getTopLeft(), blocks[i].getBottomRight(), false)).collide(balls, true);
-			if(collidedBalls.length != 0) {
-				blocks[i] = null;
-				deletedBlocks++;
-			}
+			if (collidedBalls.length > 0) blocks[i] = null;
 		}
-		BlockState[] newBlocks = new BlockState[blocks.length - deletedBlocks];
-		int j = 0;
-		for (int i = 0; i < blocks.length; i++) {
-			if (blocks[i] != null) {
-				newBlocks[j] = blocks[i];
-				j++;
-			}
-		}
-		blocks = newBlocks;
+		blocks = Arrays.stream(blocks).filter(block -> block != null).toArray(BlockState[]::new);
 		
 		// Check whether any ball hit the paddle, in which case it must bounce back.
 		// Additionally, the ball must speed up by one fifth of the current velocity of the paddle.
@@ -144,7 +131,7 @@ public class BreakoutState {
 		int paddleBottom = paddle.getCenter().getY() + paddle.getHeight() / 2;
 		
 		int[] collidedBalls = (new Rectangle(new Point(paddleLeft, paddleTop), new Point(paddleRight, paddleBottom), false)).collide(balls, false);
-		for(int i = 0; i < collidedBalls.length; i++) {
+		for (int i = 0; i < collidedBalls.length; i++) {
 			BallState ball = balls[collidedBalls[i]];
 			balls[collidedBalls[i]] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().plus(INIT_PADDLE_VELOCITY.scaled(paddleDir).scaledDiv(5)));
 		}

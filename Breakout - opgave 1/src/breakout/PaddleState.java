@@ -15,7 +15,7 @@ public class PaddleState {
 	 * @invar | WIDTH > 0
 	 * @invar | HEIGHT > 0
 	 * 
-	 * @representationObject (geldt enkel voor center)
+	 * @representationObject (only applicable to center)
 	 */
 	private final Point center;
 
