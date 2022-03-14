@@ -39,7 +39,7 @@ public class GameMap {
 	 * @post | result != null
 	 */
 	public static BreakoutState createStateFromDescription(String description) {
-		String[] lines = description.split("\n", -1);
+		String[] lines = description.split("\n", BLOCK_LINES);
 		
 		Vector unitVecRight = new Vector(WIDTH/BLOCK_COLUMNS,0);
 		Vector unitVecDown = new Vector(0,HEIGHT/BLOCK_LINES);
