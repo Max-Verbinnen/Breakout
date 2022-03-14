@@ -109,28 +109,7 @@ public class BreakoutState {
 		}
 		
 		// Check whether any balls hit the walls on the left, right and top side of the game area, in which case they must bounce back.
-		for (int i = 0; i < balls.length; i++) {
-
-			BallState ball = balls[i];
-			int radius = ball.getDiameter() / 2;
-			
-			int centerToLeftBound = ball.getCenter().getX();
-			int centerToTopBound = ball.getCenter().getY();
-			int centerToRightBound = bottomRight.getX() - ball.getCenter().getX();
-			
-			if (centerToLeftBound <= radius && ball.getVelocity().product(Vector.LEFT) > 0) {
-				balls[i] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.LEFT));
-				ball = balls[i];
-			}
-			if (centerToTopBound <= radius && ball.getVelocity().product(Vector.UP) > 0) {
-				balls[i] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.UP));
-				ball = balls[i];
-			}
-			if (centerToRightBound <= radius && ball.getVelocity().product(Vector.RIGHT) > 0) {
-				balls[i] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.RIGHT));
-				ball = balls[i];
-			}
-		}
+		(new Rectangle(new Point(0, 0), bottomRight, true)).collide(balls, false);
 		
 		// Check whether any balls hit the bottom of the field, in which case they must be removed from the game.
 		balls = Arrays.stream(balls)
@@ -141,50 +120,10 @@ public class BreakoutState {
 		int deletedBlocks = 0;
 		for (int i = 0; i < blocks.length; i++) {
 			
-			BlockState block = blocks[i];
-			
-			int blockLeft = block.getTopLeft().getX();
-			int blockTop = block.getTopLeft().getY();
-			int blockRight = block.getBottomRight().getX();
-			int blockBottom = block.getBottomRight().getY();
-			
-			for (int j = 0; j < balls.length && block != null; j++) {
-				
-				BallState ball = balls[j];
-				int radius = ball.getDiameter() / 2;
-				
-				// Check horizontal  line of the block
-				if (ball.getCenter().getY() > blockTop && ball.getCenter().getY() < blockBottom) {
-					if (Math.abs(blockLeft - ball.getCenter().getX()) <= radius && ball.getVelocity().product(Vector.RIGHT) > 0) {
-						balls[j] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.RIGHT));
-						blocks[i] = null;
-						deletedBlocks++;
-						block = blocks[i];
-						
-					}else if (Math.abs(blockRight - ball.getCenter().getX()) <= radius && ball.getVelocity().product(Vector.LEFT) > 0) {
-						balls[j] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.LEFT));
-						blocks[i] = null;
-						deletedBlocks++;
-						block = blocks[i];
-						
-					}
-				}
-				// Check vertical line of the block
-				else if (ball.getCenter().getX() > blockLeft && ball.getCenter().getX() < blockRight) {
-					if (Math.abs(blockTop - ball.getCenter().getY()) <= radius && ball.getVelocity().product(Vector.DOWN) > 0) {
-						balls[j] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.DOWN));
-						blocks[i] = null;
-						deletedBlocks++;
-						block = blocks[i];
-						
-					}else if (Math.abs(blockBottom - ball.getCenter().getY()) <= radius && ball.getVelocity().product(Vector.UP) > 0) {
-						balls[j] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.UP));
-						blocks[i] = null;
-						deletedBlocks++;
-						block = blocks[i];
-						
-					}
-				}
+			int[] collidedBalls = (new Rectangle(blocks[i].getTopLeft(), blocks[i].getBottomRight(), false)).collide(balls, true);
+			if(collidedBalls.length != 0) {
+				blocks[i] = null;
+				deletedBlocks++;
 			}
 		}
 		BlockState[] newBlocks = new BlockState[blocks.length - deletedBlocks];
@@ -204,31 +143,10 @@ public class BreakoutState {
 		int paddleRight = paddle.getCenter().getX() + paddle.getWidth() / 2;
 		int paddleBottom = paddle.getCenter().getY() + paddle.getHeight() / 2;
 		
-		for (int i = 0; i < balls.length; i++) {
-			
-			BallState ball = balls[i];
-			int radius = ball.getDiameter() / 2;
-			
-			// Check horizontal  line of the paddle
-			if (ball.getCenter().getY() > paddleTop && ball.getCenter().getY() < paddleBottom) {
-				if (Math.abs(paddleLeft - ball.getCenter().getX()) <= radius && ball.getVelocity().product(Vector.RIGHT) > 0) {
-					balls[i] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.RIGHT).plus(INIT_PADDLE_VELOCITY.scaled(paddleDir).scaledDiv(5)));
-					
-				}else if (Math.abs(paddleRight - ball.getCenter().getX()) <= radius && ball.getVelocity().product(Vector.LEFT) > 0) {
-					balls[i] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.LEFT).plus(INIT_PADDLE_VELOCITY.scaled(paddleDir).scaledDiv(5)));
-					
-				}
-			}
-			// Check vertical line of the paddle
-			else if (ball.getCenter().getX() > paddleLeft && ball.getCenter().getX() < paddleRight) {
-				if (Math.abs(paddleTop - ball.getCenter().getY()) <= radius && ball.getVelocity().product(Vector.DOWN) > 0) {
-					balls[i] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.DOWN).plus(INIT_PADDLE_VELOCITY.scaled(paddleDir).scaledDiv(5)));
-					
-				}else if (Math.abs(paddleBottom - ball.getCenter().getY()) <= radius && ball.getVelocity().product(Vector.UP) > 0) {
-					balls[i] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(Vector.UP).plus(INIT_PADDLE_VELOCITY.scaled(paddleDir).scaledDiv(5)));
-					
-				}
-			}
+		int[] collidedBalls = (new Rectangle(new Point(paddleLeft, paddleTop), new Point(paddleRight, paddleBottom), false)).collide(balls, false);
+		for(int i = 0; i < collidedBalls.length; i++) {
+			BallState ball = balls[collidedBalls[i]];
+			balls[collidedBalls[i]] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().plus(INIT_PADDLE_VELOCITY.scaled(paddleDir).scaledDiv(5)));
 		}
 	}
 
