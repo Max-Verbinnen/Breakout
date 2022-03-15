@@ -38,7 +38,7 @@ public class Rectangle {
 	 * @pre | topLeft != null
 	 * @pre | bottomRight != null
 	 * @pre | topLeft.isUpAndLeftFrom(bottomRight)
-	 * @pre | (new Point(0, 0)).isUpAndLeftFrom(bottomRight)
+	 * @pre | (new Point(0, 0)).isUpAndLeftFrom(topLeft)
 	 * 
 	 * @inspects | topLeft, bottomRight
 	 */
