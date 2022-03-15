@@ -13,9 +13,9 @@ import java.util.Arrays;
  * @invar | Arrays.stream(getBalls()).allMatch(ball -> ball != null)
  * @invar | Arrays.stream(getBlocks()).allMatch(block -> block != null)
  * 
- * @invar | Arrays.stream(getBalls()).allMatch(ball -> ball.getCenter().getX() >= 0 && ball.getCenter().getX() <= getBottomRight().getX() && ball.getCenter().getY() >= 0 && ball.getCenter().getY() <= getBottomRight().getY())
- * @invar | Arrays.stream(getBlocks()).allMatch(block -> block.getTopLeft().getX() >= 0 && block.getTopLeft().getX() <= getBottomRight().getX() && block.getTopLeft().getY() >= 0 && block.getTopLeft().getY() <= getBottomRight().getY() && block.getBottomRight().getX() >= 0 && block.getBottomRight().getX() <= getBottomRight().getX() && block.getBottomRight().getY() >= 0 && block.getBottomRight().getY() <= getBottomRight().getY())
- * @invar | getPaddle().getCenter().getX() + getPaddle().getWidth() / 2 <= getBottomRight().getX() && getPaddle().getCenter().getX() - getPaddle().getWidth() / 2 >= 0
+ * @invar | withinBounds(getBalls())
+ * @invar | withinBounds(getBlocks())
+ * @invar | withinBounds(getPaddle())
  */
 public class BreakoutState {
 	/**
@@ -27,9 +27,9 @@ public class BreakoutState {
 	 * @invar | Arrays.stream(balls).allMatch(ball -> ball != null)
 	 * @invar | Arrays.stream(blocks).allMatch(block -> block != null)
 	 * 
-	 * @invar | Arrays.stream(balls).allMatch(ball -> ball.getCenter().getX() >= 0 && ball.getCenter().getX() <= bottomRight.getX() && ball.getCenter().getY() >= 0 && ball.getCenter().getY() <= bottomRight.getY())
-	 * @invar | Arrays.stream(blocks).allMatch(block -> block.getTopLeft().getX() >= 0 && block.getTopLeft().getX() <= bottomRight.getX() && block.getTopLeft().getY() >= 0 && block.getTopLeft().getY() <= bottomRight.getY() && block.getBottomRight().getX() >= 0 && block.getBottomRight().getX() <= bottomRight.getX() && block.getBottomRight().getY() >= 0 && block.getBottomRight().getY() <= bottomRight.getY())
-	 * @invar | paddle.getCenter().getX() + paddle.getWidth() / 2 <= bottomRight.getX() && paddle.getCenter().getX() - paddle.getWidth() / 2 >= 0
+	 * @invar | withinBounds(balls)
+	 * @invar | withinBounds(blocks)
+	 * @invar | withinBounds(paddle)
 	 * 
 	 * @representationObject (applicable for all 4)
 	 */
@@ -47,6 +47,13 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException | blocks == null
 	 * @throws IllegalArgumentException | bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)
 	 * @throws IllegalArgumentException | paddle == null
+	 * 
+	 * @throws IllegalArgumentException | Arrays.stream(balls).anyMatch(ball -> ball == null)
+	 * @throws IllegalArgumentException | Arrays.stream(blocks).anyMatch(block -> block == null)
+	 * 
+	 * @throws IllegalArgumentException | !withinBounds(balls)
+	 * @throws IllegalArgumentException | !withinBounds(blocks)
+	 * @throws IllegalArgumentException | !withinBounds(paddle)
 	 *  
 	 * @post  | Arrays.equals(getBalls(), balls)
 	 * @post  | Arrays.equals(getBlocks(), blocks)
@@ -56,10 +63,15 @@ public class BreakoutState {
 	 * @inspects | balls, blocks, bottomRight, paddle
 	 */
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
-		if (balls == null) throw new IllegalArgumentException("balls is invalid!");
-		if (blocks == null) throw new IllegalArgumentException("blocks is invalid!");
-		if (bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)) throw new IllegalArgumentException("bottomRight is invalid!");
-		if (paddle == null) throw new IllegalArgumentException("paddle is invalid!");
+		if (balls == null) throw new IllegalArgumentException("´balls´ is invalid!");
+		if (blocks == null) throw new IllegalArgumentException("´blocks´ is invalid!");
+		if (bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)) throw new IllegalArgumentException("´bottomRight´ is invalid!");
+		if (paddle == null) throw new IllegalArgumentException("´paddle´ is invalid!");
+		if (Arrays.stream(balls).anyMatch(ball -> ball == null)) throw new IllegalArgumentException("´balls´ contains null pointer!");
+		if (Arrays.stream(blocks).anyMatch(block -> block == null)) throw new IllegalArgumentException("´blocks´ contains null pointer!");
+		if (!withinBounds(balls)) throw new IllegalArgumentException("´balls´ aren't all located within game window!");
+		if (!withinBounds(blocks)) throw new IllegalArgumentException("´blocks´ aren't all located within game window!");
+		if (!withinBounds(paddle)) throw new IllegalArgumentException("´paddle´ isn't located within game window!");
 
 		this.balls = balls.clone();
 		this.blocks = blocks.clone();
@@ -167,5 +179,61 @@ public class BreakoutState {
 	 */
 	public boolean isDead() {
 		return balls.length == 0;
+	}
+	
+	/**
+	 * Returns whether ball is located within game window.
+	 * 
+	 * @pre | balls != null
+	 * @pre | Arrays.stream(balls).allMatch(ball -> ball != null)
+	 * 
+	 * @post | Arrays.stream(getBalls()).allMatch(ball -> ball.getCenter().getX() >= 0 && ball.getCenter().getX() <= getBottomRight().getX() && ball.getCenter().getY() >= 0 && ball.getCenter().getY() <= getBottomRight().getY())
+	 * 
+	 * @inspects | this, balls
+	 */
+	public boolean withinBounds(BallState[] balls) {
+		return Arrays.stream(balls).allMatch(ball -> 
+					ball.getCenter().getX() >= 0
+					&& ball.getCenter().getX() <= bottomRight.getX()
+					&& ball.getCenter().getY() >= 0
+					&& ball.getCenter().getY() <= bottomRight.getY()
+				);
+	}
+	
+	/**
+	 * Returns whether block is located within game window.
+	 * 
+	 * @pre | blocks != null
+	 * @pre | Arrays.stream(blocks).allMatch(block -> block != null)
+	 * 
+	 * @post | Arrays.stream(getBlocks()).allMatch(block -> block.getTopLeft().getX() >= 0 && block.getTopLeft().getX() <= getBottomRight().getX() && block.getTopLeft().getY() >= 0 && block.getTopLeft().getY() <= getBottomRight().getY() && block.getBottomRight().getX() >= 0 && block.getBottomRight().getX() <= getBottomRight().getX() && block.getBottomRight().getY() >= 0 && block.getBottomRight().getY() <= getBottomRight().getY())
+	 * 
+	 * @inspects | this, blocks
+	 */
+	public boolean withinBounds(BlockState[] blocks) {
+		return Arrays.stream(blocks).allMatch(block -> 
+					block.getTopLeft().getX() >= 0
+					&& block.getTopLeft().getX() <= bottomRight.getX()
+					&& block.getTopLeft().getY() >= 0
+					&& block.getTopLeft().getY() <= bottomRight.getY()
+					&& block.getBottomRight().getX() >= 0
+					&& block.getBottomRight().getX() <= bottomRight.getX()
+					&& block.getBottomRight().getY() >= 0
+					&& block.getBottomRight().getY() <= bottomRight.getY()
+				);
+	}
+	
+	/**
+	 * Returns whether paddle is located within game window.
+	 * 
+	 * @pre | paddle != null
+	 * 
+	 * @post | getPaddle().getCenter().getX() + getPaddle().getWidth() / 2 <= getBottomRight().getX() && getPaddle().getCenter().getX() - getPaddle().getWidth() / 2 >= 0
+	 * 
+	 * @inspects | this, paddle
+	 */
+	public boolean withinBounds(PaddleState paddle) {
+		return paddle.getCenter().getX() + paddle.getWidth() / 2 <= bottomRight.getX()
+			   && paddle.getCenter().getX() - paddle.getWidth() / 2 >= 0;
 	}
 }
