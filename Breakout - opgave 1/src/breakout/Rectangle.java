@@ -7,6 +7,15 @@ import java.util.Arrays;
  * Represents rectangles (e.g. paddle, block or game window)
  *
  * @immutable
+ * 
+ * @invar | getLeftBound() < getRightBound()
+ * @invar | getTopBound() < getBottomBound()
+ * @invar | getLeftBound() >= 0 && getTopBound() >= 0 && getRightBound() >= 0 && getBottomBound() >= 0
+ * 
+ * @invar | getLeftBoundVector() != null
+ * @invar | getTopBoundVector() != null
+ * @invar | getRightBoundVector() != null
+ * @invar | getBottomBoundVector() != null
  */
 public class Rectangle {
 	/**
@@ -40,6 +49,16 @@ public class Rectangle {
 	 * @pre | topLeft.isUpAndLeftFrom(bottomRight)
 	 * @pre | (new Point(0, 0)).isUpAndLeftFrom(topLeft)
 	 * 
+	 * @post | getLeftBound() == topLeft.getX()
+	 * @post | getTopBound() == topLeft.getY()
+	 * @post | getRightBound() == bottomRight.getX()
+	 * @post | getBottomBound() == bottomRight.getY()
+	 * 
+	 * @post | getLeftBoundVector() == ((isInverted) ? Vector.LEFT : Vector.RIGHT)
+	 * @post | getTopBoundVector() == ((isInverted) ? Vector.UP : Vector.DOWN)
+	 * @post | getRightBoundVector() == ((isInverted) ? Vector.RIGHT : Vector.LEFT)
+	 * @post | getBottomBoundVector() == ((isInverted) ? Vector.DOWN : Vector.UP)
+	 * 
 	 * @inspects | topLeft, bottomRight
 	 */
 	public Rectangle(Point topLeft, Point bottomRight, boolean isInverted) {
@@ -52,6 +71,62 @@ public class Rectangle {
 		topBoundVector = (isInverted) ? Vector.UP : Vector.DOWN;
 		rightBoundVector = (isInverted) ? Vector.RIGHT : Vector.LEFT;
 		bottomBoundVector = (isInverted) ? Vector.DOWN : Vector.UP;
+	}
+	
+	/**
+	 * Returns left bound of rectangle.
+	 */
+	public int getLeftBound() {
+		return leftBound;
+	}
+	
+	/**
+	 * Returns top bound of rectangle.
+	 */
+	public int getTopBound() {
+		return topBound;
+	}
+	
+	/**
+	 * Returns right bound of rectangle.
+	 */
+	public int getRightBound() {
+		return rightBound;
+	}
+	
+	/**
+	 * Returns bottom bound of rectangle.
+	 */
+	public int getBottomBound() {
+		return bottomBound;
+	}
+	
+	/**
+	 * Returns the left bound vector (= used to mirror velocity)
+	 */
+	public Vector getLeftBoundVector() {
+		return leftBoundVector;
+	}
+	
+	/**
+	 * Returns the top bound vector (= used to mirror velocity)
+	 */
+	public Vector getTopBoundVector() {
+		return topBoundVector;
+	}
+	
+	/**
+	 * Returns the right bound vector (= used to mirror velocity)
+	 */
+	public Vector getRightBoundVector() {
+		return rightBoundVector;
+	}
+	
+	/**
+	 * Returns the bottom bound vector (= used to mirror velocity)
+	 */
+	public Vector getBottomBoundVector() {
+		return bottomBoundVector;
 	}
 	
 	/**
