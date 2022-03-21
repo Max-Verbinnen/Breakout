@@ -1,7 +1,7 @@
 package breakout;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Represents rectangles (e.g. paddle, block or game window)
@@ -143,7 +143,7 @@ public class Rectangle {
 	 */
 	public int[] collide(BallState[] balls, boolean canOnlyBeHitOnce) {
 		
-		ArrayList<Integer> collidedBalls = new ArrayList<Integer>();
+		HashSet<Integer> collidedBalls = new HashSet<Integer>();
 		
 		for (int i = 0; i < balls.length; i++) {
 
@@ -164,7 +164,7 @@ public class Rectangle {
 				}
 			}
 			// Check vertical line of the rectangle
-			else if (ball.getCenter().getX() > leftBound && ball.getCenter().getX() < rightBound) {
+			if (ball.getCenter().getX() > leftBound && ball.getCenter().getX() < rightBound) {
 				if (Math.abs(topBound - ball.getCenter().getY()) <= radius && ball.getVelocity().product(topBoundVector) > 0) {
 					balls[i] = new BallState(ball.getCenter(), ball.getDiameter(), ball.getVelocity().mirrorOver(topBoundVector));
 					collidedBalls.add(i);
