@@ -187,7 +187,7 @@ public class BreakoutState {
 	 * @pre | balls != null
 	 * @pre | Arrays.stream(balls).allMatch(ball -> ball != null)
 	 * 
-	 * @post | Arrays.stream(balls).allMatch(ball -> ball.getCenter().getX() >= 0 && ball.getCenter().getX() <= bottomRight.getX() && ball.getCenter().getY() >= 0 && ball.getCenter().getY() <= bottomRight.getY())
+	 * @post | result == Arrays.stream(balls).allMatch(ball -> ball.getCenter().getX() >= 0 && ball.getCenter().getX() <= bottomRight.getX() && ball.getCenter().getY() >= 0 && ball.getCenter().getY() <= bottomRight.getY())
 	 * 
 	 * @inspects | balls, bottomRight
 	 */
@@ -206,7 +206,7 @@ public class BreakoutState {
 	 * @pre | blocks != null
 	 * @pre | Arrays.stream(blocks).allMatch(block -> block != null)
 	 * 
-	 * @post | Arrays.stream(blocks).allMatch(block -> block.getTopLeft().getX() >= 0 && block.getTopLeft().getX() <= bottomRight.getX() && block.getTopLeft().getY() >= 0 && block.getTopLeft().getY() <= bottomRight.getY() && block.getBottomRight().getX() >= 0 && block.getBottomRight().getX() <= bottomRight.getX() && block.getBottomRight().getY() >= 0 && block.getBottomRight().getY() <= bottomRight.getY())
+	 * @post | result == Arrays.stream(blocks).allMatch(block -> block.getTopLeft().getX() >= 0 && block.getTopLeft().getX() <= bottomRight.getX() && block.getTopLeft().getY() >= 0 && block.getTopLeft().getY() <= bottomRight.getY() && block.getBottomRight().getX() <= bottomRight.getX() && block.getBottomRight().getY() <= bottomRight.getY())
 	 * 
 	 * @inspects | blocks, bottomRight
 	 */
@@ -216,9 +216,7 @@ public class BreakoutState {
 					&& block.getTopLeft().getX() <= bottomRight.getX()
 					&& block.getTopLeft().getY() >= 0
 					&& block.getTopLeft().getY() <= bottomRight.getY()
-					&& block.getBottomRight().getX() >= 0
 					&& block.getBottomRight().getX() <= bottomRight.getX()
-					&& block.getBottomRight().getY() >= 0
 					&& block.getBottomRight().getY() <= bottomRight.getY()
 				);
 	}
@@ -228,7 +226,7 @@ public class BreakoutState {
 	 * 
 	 * @pre | paddle != null
 	 * 
-	 * @post | paddle.getCenter().getX() + paddle.getWidth() / 2 <= bottomRight.getX() && paddle.getCenter().getX() - paddle.getWidth() / 2 >= 0
+	 * @post | result == (paddle.getCenter().getX() + paddle.getWidth() / 2 <= bottomRight.getX() && paddle.getCenter().getX() - paddle.getWidth() / 2 >= 0)
 	 * 
 	 * @inspects | paddle, bottomRight
 	 */
