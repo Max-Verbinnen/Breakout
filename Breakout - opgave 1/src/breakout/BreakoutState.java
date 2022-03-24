@@ -63,15 +63,15 @@ public class BreakoutState {
 	 * @inspects | balls, blocks, bottomRight, paddle
 	 */
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
-		if (balls == null) throw new IllegalArgumentException("´balls´ is invalid!");
-		if (blocks == null) throw new IllegalArgumentException("´blocks´ is invalid!");
-		if (bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)) throw new IllegalArgumentException("´bottomRight´ is invalid!");
-		if (paddle == null) throw new IllegalArgumentException("´paddle´ is invalid!");
-		if (Arrays.stream(balls).anyMatch(ball -> ball == null)) throw new IllegalArgumentException("´balls´ contains null pointer!");
-		if (Arrays.stream(blocks).anyMatch(block -> block == null)) throw new IllegalArgumentException("´blocks´ contains null pointer!");
-		if (!withinBounds(balls, bottomRight)) throw new IllegalArgumentException("´balls´ aren't all located within game window!");
-		if (!withinBounds(blocks, bottomRight)) throw new IllegalArgumentException("´blocks´ aren't all located within game window!");
-		if (!withinBounds(paddle, bottomRight)) throw new IllegalArgumentException("´paddle´ isn't located within game window!");
+		if (balls == null) throw new IllegalArgumentException("balls is invalid!");
+		if (blocks == null) throw new IllegalArgumentException("blocks is invalid!");
+		if (bottomRight == null || !(new Point(0, 0)).isUpAndLeftFrom(bottomRight)) throw new IllegalArgumentException("bottomRight is invalid!");
+		if (paddle == null) throw new IllegalArgumentException("paddle is invalid!");
+		if (Arrays.stream(balls).anyMatch(ball -> ball == null)) throw new IllegalArgumentException("balls contains null pointer!");
+		if (Arrays.stream(blocks).anyMatch(block -> block == null)) throw new IllegalArgumentException("blocks contains null pointer!");
+		if (!withinBounds(balls, bottomRight)) throw new IllegalArgumentException("balls aren't all located within game window!");
+		if (!withinBounds(blocks, bottomRight)) throw new IllegalArgumentException("blocks aren't all located within game window!");
+		if (!withinBounds(paddle, bottomRight)) throw new IllegalArgumentException("paddle isn't located within game window!");
 		
 		this.balls = balls.clone();
 		this.blocks = blocks.clone();
