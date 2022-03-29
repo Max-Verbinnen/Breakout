@@ -1,55 +1,67 @@
 package breakout;
 
 /**
- * This class represents the state of the ball.
+ * Represents the state of a ball in the breakout game.
  * 
  * @immutable
- * 
- * @invar | getCenter() != null
+ * @invar | getLocation() != null
  * @invar | getVelocity() != null
- * @invar | getDiameter() > 0
  */
 public class BallState {
-	/**
-	 * @invar | center != null
-	 * @invar | velocity != null
-	 * @invar | diameter > 0
-	 * 
-	 * @representationObject (applicable for first 2)
-	 */
-	private final Point center;
+	
+	private final Circle location;
 	private final Vector velocity;
-	private final int diameter;
 	
 	/**
-	 * Return a new BallState with a center, diameter and velocity.
+	 * Construct a new ball at a given `location`, with a given `velocity`.
 	 * 
-	 * @pre | center != null
+	 * @pre | location != null
 	 * @pre | velocity != null
-	 * @pre | diameter > 0
-	 * 
-	 * @post | getCenter() == center
-	 * @post | getDiameter() == diameter
-	 * @post | getVelocity() == velocity
+	 * @post | getLocation() == location
+	 * @post | getVelocity().equals(velocity) 
 	 */
-	public BallState(Point center, int diameter, Vector velocity) {
-		this.center = center;
-		this.diameter = diameter;
+	public BallState(Circle location, Vector velocity) {
+		this.location = location;
 		this.velocity = velocity;
 	}
 	
-	/** Return this ball's center. */
-	public Point getCenter() {
-		return center;
+	/**
+	 * Return this ball's location.
+	 */
+	public Circle getLocation() {
+		return location;
 	}
-	
-	/** Return this ball's diameter. */
-	public int getDiameter() {
-		return diameter;
-	}
-	
-	/** Return this ball's velocity. */
+
+	/**
+	 * Return this ball's velocity.
+	 */
 	public Vector getVelocity() {
 		return velocity;
+	}
+
+	/**
+	 * Check whether this ball collides with a given `rect` and if so, return the 
+	 * new velocity this ball will have after bouncing on the given rect.
+	 * 
+	 * @pre | rect != null
+	 * @post | (rect.collideWith(getLocation()) == null && result == null) ||
+	 *       | (getVelocity().product(rect.collideWith(getLocation())) <= 0 && result == null) || 
+	 *       | (result.equals(getVelocity().mirrorOver(rect.collideWith(getLocation()))))
+	 */
+	public Vector bounceOn(Rect rect) {
+		Vector coldir = rect.collideWith(location);
+		if(coldir != null && velocity.product(coldir) > 0) {
+			return velocity.mirrorOver(coldir);
+		}
+		return null;
+	}
+
+	/**
+	 * Return this point's center.
+	 * 
+	 * @post | getLocation().getCenter().equals(result)
+	 */
+	public Point getCenter() {
+		return getLocation().getCenter();
 	}
 }

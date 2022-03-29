@@ -1,47 +1,32 @@
 package breakout;
 
 /**
- * This class represents the state of the block.
- * 
+ * Represents the state of a block in the breakout game.
+ *
  * @immutable
- * 
- * @invar | getTopLeft() != null
- * @invar | getBottomRight() != null
- * @invar | getTopLeft().isUpAndLeftFrom(getBottomRight())
+ * @invar | getLocation() != null
  */
 public class BlockState {
-	/**
-	 * @invar | topLeft != null
-	 * @invar | bottomRight != null
-	 * @invar | topLeft.isUpAndLeftFrom(bottomRight)
-	 * 
-	 * @representationObject
-	 */
-	private final Point topLeft;
-	private final Point bottomRight;
 	
 	/**
-	 * Return a new BlockState with a topLeft Point and bottomRight Point.
-	 * 
-	 * @pre | topLeft != null
-	 * @pre | bottomRight != null
-	 * @pre | topLeft.isUpAndLeftFrom(bottomRight)
-	 * 
-	 * @post | getTopLeft() == topLeft
-	 * @post | getBottomRight() == bottomRight
+	 * @invar | location != null
 	 */
-	public BlockState(Point topLeft, Point bottomRight) {
-		this.topLeft = topLeft;
-		this.bottomRight = bottomRight;
+	private final Rect location;
+
+	/**
+	 * Construct a block occupying a given rectangle in the field.
+	 * @pre | location != null
+	 * @post | getLocation().equals(location)
+	 */
+	public BlockState(Rect location) {
+		this.location = location;
+	}
+
+	/**
+	 * Return the rectangle occupied by this block in the field.
+	 */
+	public Rect getLocation() {
+		return location;
 	}
 	
-	/** Return this block's top left coordinate. */
-	public Point getTopLeft() {
-		return topLeft;
-	}
-	
-	/** Return this block's bottom right coordinate. */
-	public Point getBottomRight() {
-		return bottomRight;
-	}
 }
