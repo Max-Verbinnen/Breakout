@@ -7,19 +7,19 @@ import org.junit.jupiter.api.Test;
 
 class SubmissionTestSuite2 {
 
-	private BallState[] oneBall;
+	private Ball[] oneBall;
 	private BlockState block;
 	private BlockState[] oneBlock;
 	private Point bottomRight;
 	private PaddleState paddle;
 	private BreakoutState stateBeforeBounceBlock;
-	private BallState ball;
+	private Ball ball;
 	private BreakoutFacade facade = new BreakoutFacade();
 
 	@BeforeEach
 	void setUp() throws Exception {
 		ball = facade.createNormalBall(new Point(1000, 1000), 100, new Vector(0, 5));
-		oneBall = new BallState[] { ball };
+		oneBall = new Ball[] { ball };
 		block = facade.createNormalBlockState(new Point(0, 1051), new Point(2000, 1200));
 		oneBlock = new BlockState[] { block };
 		bottomRight = new Point(10000, 2000);

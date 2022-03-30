@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class SubmissionTestSuite {
 
-	BallState[] oneBall;
+	Ball[] oneBall;
 	BlockState[] oneBlock;
 	Point bottomRight;
 	PaddleState paddle;
@@ -19,7 +19,7 @@ class SubmissionTestSuite {
 	BreakoutState stateBeforeBounceBlock;
 	Vector origBallVelocity;
 	BlockState bounceBlock;
-	BallState ball;
+	Ball ball;
 
 	public static final String initMap1 = """
 #		       
@@ -107,7 +107,7 @@ class SubmissionTestSuite {
 	void testTickNormal() {
 		state1.tick(0,1);
 		assertEquals(1,state1.getBalls().length);
-		BallState b = state1.getBalls()[0];
+		Ball b = state1.getBalls()[0];
 		assertEquals(origBallVelocity,b.getVelocity());
 	}
 

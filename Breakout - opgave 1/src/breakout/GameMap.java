@@ -14,24 +14,32 @@ public class GameMap {
 
 	private GameMap() { throw new AssertionError("This class is not intended to be instantiated"); }
 
-	private static BlockState createBlock(Point bottomLeft) {
+	private static BlockState createBlock(Point bottomLeft, char blockType) {
 		Vector marginBL = new Vector(20,20);
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS-70,HEIGHT/BLOCK_LINES-70);
 		Point blockTL = bottomLeft.plus(marginBL);
 		Point blockBR = blockTL.plus(size);
 		Rect loc = new Rect(blockTL,blockBR);
-		return new BlockState(loc);
+		
+		switch (blockType) {
+			case '#': return new NormalBlock(loc);
+			case 'S': return new SturdyBlock(loc);
+			case '!': return new PowerupBlock(loc);
+			case 'R': return new ReplicationBlock(loc);
+		}
+		
+		return null;
 	}
 	private static PaddleState createPaddle(Point bottomLeft) {
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
 		Point center = bottomLeft.plus(size);
 		return new PaddleState(center);
 	}
-	private static BallState createBall(Point bottomLeft) {
+	private static Ball createBall(Point bottomLeft) {
 		Vector centerD = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
 		Point center = bottomLeft.plus(centerD);
 		int diameter = INIT_BALL_DIAMETER;
-		return new BallState(new Circle(center,diameter),INIT_BALL_VELOCITY);
+		return new NormalBall(new Circle(center,diameter),INIT_BALL_VELOCITY);
 	}
 	
 	/**
@@ -46,7 +54,7 @@ public class GameMap {
 		Vector unitVecDown = new Vector(0,HEIGHT/BLOCK_LINES);
 		BlockState[] blocks = new BlockState[BLOCK_COLUMNS*BLOCK_LINES];
 		int nblock = 0;
-		BallState[] balls = new BallState[BLOCK_COLUMNS*BLOCK_LINES];
+		Ball[] balls = new Ball[BLOCK_COLUMNS*BLOCK_LINES];
 		int nball = 0;
 		PaddleState paddle = null;
 		
@@ -57,9 +65,12 @@ public class GameMap {
 			Point cursor = topLeft;
 			for(char c : line.toCharArray()) {
 				switch(c) {
-				case '#': blocks[nblock++] = createBlock(cursor); break;
-				case 'o': balls[nball++] = createBall(cursor); break;
-				case '=': paddle = createPaddle(cursor); break;
+					case '#': blocks[nblock++] = createBlock(cursor, c); break;
+					case 'S': blocks[nblock++] = createBlock(cursor, c); break;
+					case '!': blocks[nblock++] = createBlock(cursor, c); break;
+					case 'R': blocks[nblock++] = createBlock(cursor, c); break;
+					case 'o': balls[nball++] = createBall(cursor); break;
+					case '=': paddle = createPaddle(cursor); break;
 				}
 				cursor = cursor.plus(unitVecRight);
 			}
@@ -67,7 +78,7 @@ public class GameMap {
 		}
 		Point topRight = new Point(WIDTH, HEIGHT);
 		
-		return new BreakoutState(Arrays.stream(balls).filter(x -> x != null).toArray(BallState[]::new),
+		return new BreakoutState(Arrays.stream(balls).filter(x -> x != null).toArray(Ball[]::new),
 								 Arrays.stream(blocks).filter(x -> x != null).toArray(BlockState[]::new),
 								 topRight, paddle);
 	}

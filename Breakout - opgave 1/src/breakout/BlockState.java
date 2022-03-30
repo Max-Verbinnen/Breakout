@@ -6,7 +6,7 @@ package breakout;
  * @immutable
  * @invar | getLocation() != null
  */
-public class BlockState {
+public abstract class BlockState {
 	
 	/**
 	 * @invar | location != null
@@ -28,5 +28,7 @@ public class BlockState {
 	public Rect getLocation() {
 		return location;
 	}
+	
+	public abstract void handleCollision(BreakoutState game);
 	
 }

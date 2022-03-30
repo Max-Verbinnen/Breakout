@@ -18,7 +18,7 @@ class BallTest {
 	
 	Circle c052;
 	Circle c389;
-	BallState b1;
+	Ball b1;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -31,7 +31,7 @@ class BallTest {
 		c052 = new Circle(p05,2);
 		c389 = new Circle(p38,9);
 		v1010 = new Vector(10,10);
-		b1 = new BallState(c052, v1010);
+		b1 = new NormalBall(c052, v1010);
 	}
 
 	@Test

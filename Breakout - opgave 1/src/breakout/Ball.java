@@ -3,11 +3,10 @@ package breakout;
 /**
  * Represents the state of a ball in the breakout game.
  * 
- * @immutable
  * @invar | getLocation() != null
  * @invar | getVelocity() != null
  */
-public class BallState {
+public abstract class Ball {
 	
 	private final Circle location;
 	private final Vector velocity;
@@ -20,7 +19,7 @@ public class BallState {
 	 * @post | getLocation() == location
 	 * @post | getVelocity().equals(velocity) 
 	 */
-	public BallState(Circle location, Vector velocity) {
+	public Ball(Circle location, Vector velocity) {
 		this.location = location;
 		this.velocity = velocity;
 	}
@@ -37,6 +36,24 @@ public class BallState {
 	 */
 	public Vector getVelocity() {
 		return velocity;
+	}
+	
+	/**
+	 * Return this point's center.
+	 * 
+	 * @post | getLocation().getCenter().equals(result)
+	 */
+	public Point getCenter() {
+		return getLocation().getCenter();
+	}
+	
+	/**
+	 * Return this point's diameter.
+	 * 
+	 * @post | result == getLocation().getDiameter()
+	 */
+	public int getDiameter() {
+		return getLocation().getDiameter();
 	}
 
 	/**
@@ -56,12 +73,4 @@ public class BallState {
 		return null;
 	}
 
-	/**
-	 * Return this point's center.
-	 * 
-	 * @post | getLocation().getCenter().equals(result)
-	 */
-	public Point getCenter() {
-		return getLocation().getCenter();
-	}
 }

@@ -24,7 +24,7 @@ class BlockTest {
 		pm14 = new Point(-1,4);
 		r1138 = new Rect(p11,p38);
 		rm1438 = new Rect(pm14,p38);
-		b1 = new BlockState(r1138);
+		b1 = new NormalBlock(r1138);
 	}
 
 	@Test

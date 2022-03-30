@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import breakout.Ball;
 import breakout.BallState;
 import breakout.BlockState;
 import breakout.BreakoutFacade;
@@ -170,7 +171,7 @@ public class GameView extends JPanel {
 
 	private void paintBalls(Graphics g) {
 		// ball
-		for (BallState ball : facade.getBalls(breakoutState)) {
+		for (Ball ball : facade.getBalls(breakoutState)) {
 			Circle c = new Circle(facade.getCenter(ball), facade.getDiameter(ball));
 			Point tl = c.getTopLeftPoint();
 			Point br = c.getBottomRightPoint();
