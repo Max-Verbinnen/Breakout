@@ -1,5 +1,8 @@
 package breakout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents the state of a ball in the breakout game.
  * 
@@ -8,8 +11,9 @@ package breakout;
  */
 public abstract class Ball {
 	
-	private final Circle location;
-	private final Vector velocity;
+	private Circle location;
+	private Vector velocity;
+	private final Vector[] NEW_BALLS_VECTORS = new Vector[] {new Vector(2, -2), new Vector(-2, 2), new Vector(2, 2)};
 	
 	/**
 	 * Construct a new ball at a given `location`, with a given `velocity`.
@@ -36,6 +40,14 @@ public abstract class Ball {
 	 */
 	public Vector getVelocity() {
 		return velocity;
+	}
+	
+	public void setLocation(Circle location) {
+		this.location = location;
+	}
+	
+	public void setVelocity(Vector velocity) {
+		this.velocity = velocity;
 	}
 	
 	/**
@@ -72,5 +84,20 @@ public abstract class Ball {
 		}
 		return null;
 	}
+	
+	public void replicateBalls(int additionalBalls, BreakoutState game) {
+		List<Ball> newBalls = new ArrayList<Ball>();
+		
+		for (int i = 0; i < additionalBalls; i++) {
+			Ball newBall = createBall(this.getLocation(), this.getVelocity().plus(NEW_BALLS_VECTORS[i]), game);
+			newBalls.add(newBall);
+		}
+		
+		game.addBalls(newBalls.toArray(Ball[]::new));
+	}
+	
+	public abstract Ball createBall(Circle location, Vector velocity, BreakoutState game);
+	
+	public abstract void hitBlock(Rect rect, boolean destroyed);
 
 }

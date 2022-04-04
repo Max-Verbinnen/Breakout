@@ -8,8 +8,10 @@ public class SturdyBlock extends BlockState {
 	}
 	
 	@Override
-	public void handleCollision(BreakoutState game) {
+	public boolean handleCollision(BreakoutState game, Ball ball) {
 		lives--;
 		if (lives == 0) game.removeBlock(this);
+		
+		return lives == 0;
 	}
 }

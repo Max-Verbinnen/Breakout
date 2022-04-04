@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import breakout.Ball;
-import breakout.BallState;
 import breakout.BlockState;
 import breakout.BreakoutFacade;
 import breakout.BreakoutState;
@@ -176,7 +175,7 @@ public class GameView extends JPanel {
 			Point tl = c.getTopLeftPoint();
 			Point br = c.getBottomRightPoint();
 			Color color = ball.getColor();
-			paintBall(g, color, tl, br);
+			paintBall(g, Color.orange, tl, br);
 		}
 	}
 

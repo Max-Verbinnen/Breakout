@@ -7,7 +7,8 @@ public class NormalBlock extends BlockState {
 	}
 	
 	@Override
-	public void handleCollision(BreakoutState game) {
+	public boolean handleCollision(BreakoutState game, Ball ball) {
 		game.removeBlock(this);
+		return true;
 	}
 }

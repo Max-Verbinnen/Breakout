@@ -29,6 +29,6 @@ public abstract class BlockState {
 		return location;
 	}
 	
-	public abstract void handleCollision(BreakoutState game);
+	public abstract boolean handleCollision(BreakoutState game, Ball ball);
 	
 }

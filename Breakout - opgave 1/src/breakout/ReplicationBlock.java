@@ -7,8 +7,9 @@ public class ReplicationBlock extends BlockState {
 	}
 	
 	@Override
-	public void handleCollision(BreakoutState game) {
+	public boolean handleCollision(BreakoutState game, Ball ball) {
 		game.removeBlock(this);
 		game.makePaddleReplicative();
+		return true;
 	}
 }

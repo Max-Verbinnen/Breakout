@@ -6,7 +6,7 @@ package breakout;
  * @immutable
  * @invar | getCenter() != null
  */
-public class PaddleState {
+public abstract class PaddleState {
 	
 	public static final int HEIGHT = 500;
 	public static final int WIDTH = 3000;
@@ -42,5 +42,12 @@ public class PaddleState {
 		Vector halfDiag = new Vector(-WIDTH/2,-HEIGHT/2);
 		return new Rect(center.plus(halfDiag), center.plus(halfDiag.scaled(-1)));
 	}
+	
+	public abstract PaddleState createPaddle(Point center);
+	
+	/**
+	 * Returns how many additional balls should be created at collision.
+	 */
+	public abstract int handleCollision(BreakoutState game);
 
 }
