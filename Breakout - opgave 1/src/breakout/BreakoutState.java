@@ -19,6 +19,7 @@ import java.util.Objects;
 public class BreakoutState {
 
 	private static final Vector PADDLE_VEL = new Vector(10,0);
+	public static final int MAX_ELAPSED_TIME = 50;
 	/**
 	 * @invar | bottomRight != null
 	 * @invar | Point.ORIGIN.isUpAndLeftFrom(bottomRight)
@@ -29,7 +30,7 @@ public class BreakoutState {
 	 * @invar | Arrays.stream(balls).allMatch(b -> getFieldInternal().contains(b.getLocation()))
 	 * @representationObject
 	 */
-	private Ball[] balls;	
+	private Ball[] balls;
 	/**
 	 * @invar | blocks != null
 	 * @invar | Arrays.stream(blocks).allMatch(b -> getFieldInternal().contains(b.getLocation()))
@@ -154,7 +155,7 @@ public class BreakoutState {
 	/**
 	 * Nieuwe methode die nog geïmplementeerd en gedocumenteerd moet worden.
 	 */
-	public void makeBallNormal(Ball ball) {
+	public void makeBallNormal(Ball ball) {		
 		for (int i = 0; i < balls.length; i++) {
 			if (balls[i].equals(ball)) {
 				balls[i] = new NormalBall(ball.getLocation(), ball.getVelocity());
@@ -184,7 +185,7 @@ public class BreakoutState {
 	 * Nieuwe methode die nog geïmplementeerd en gedocumenteerd moet worden.
 	 */
 	public void makePaddleReplicative() {
-		paddle = new ReplicatorPaddle(paddle.getCenter());
+		paddle = new ReplicatorPaddle(paddle.getCenter(), 3);
 	}
 	
 	/**
@@ -246,7 +247,7 @@ public class BreakoutState {
 	private void bounceBallsOnBlocks() {
 		for (Ball ball: balls) {
 			for (BlockState block: blocks) {
-				if (ball == null || block == null || ball.bounceOn(block.getLocation()) == null) return;
+				if (ball == null || block == null || ball.bounceOn(block.getLocation()) == null) continue;
 				
 				boolean destroyed = block.handleCollision(this, ball);
 				ball.hitBlock(block.getLocation(), destroyed);
@@ -277,6 +278,7 @@ public class BreakoutState {
 		for (Ball ball: balls) {
 			Point newcenter = ball.getLocation().getCenter().plus(ball.getVelocity().scaled(elapsedTime));
 			ball.setLocation(ball.getLocation().withCenter(newcenter));
+			ball.updateLifetime(elapsedTime, this);
 		}
 	}
 

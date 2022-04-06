@@ -1,5 +1,6 @@
 package breakout;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,15 +90,21 @@ public abstract class Ball {
 		List<Ball> newBalls = new ArrayList<Ball>();
 		
 		for (int i = 0; i < additionalBalls; i++) {
-			Ball newBall = createBall(this.getLocation(), this.getVelocity().plus(NEW_BALLS_VECTORS[i]), game);
+			Ball newBall = copyBall(this, this.getVelocity().plus(NEW_BALLS_VECTORS[i]), game);
 			newBalls.add(newBall);
 		}
 		
 		game.addBalls(newBalls.toArray(Ball[]::new));
 	}
 	
-	public abstract Ball createBall(Circle location, Vector velocity, BreakoutState game);
+	public abstract Ball copyBall(Ball ball, Vector velocity, BreakoutState game);
 	
 	public abstract void hitBlock(Rect rect, boolean destroyed);
 
+	public abstract Color getColor();
+
+	public int getLifetime() { return -1; };
+	
+	public void updateLifetime(int elapsedTime, BreakoutState game) { };
+	
 }

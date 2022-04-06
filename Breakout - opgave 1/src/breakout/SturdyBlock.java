@@ -1,7 +1,10 @@
 package breakout;
 
+import java.awt.Color;
+
 public class SturdyBlock extends BlockState {
 	private int lives = 3;
+	private final Color[] COLORS = {Color.LIGHT_GRAY, Color.GRAY, Color.DARK_GRAY};
 
 	public SturdyBlock(Rect location) {
 		super(location);
@@ -14,4 +17,10 @@ public class SturdyBlock extends BlockState {
 		
 		return lives == 0;
 	}
+	
+	@Override
+	public Color getColor() {
+		return COLORS[lives - 1];
+	}
+
 }

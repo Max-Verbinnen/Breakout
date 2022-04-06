@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 public class NormalPaddle extends PaddleState {
 
 	public NormalPaddle(Point center) {
@@ -12,6 +14,11 @@ public class NormalPaddle extends PaddleState {
 	
 	public int handleCollision(BreakoutState game) {
 		return 0;
+	}
+	
+	@Override
+	public Color getColor() {
+		return new Color(0x99,0xff,0xff);
 	}
 	
 }

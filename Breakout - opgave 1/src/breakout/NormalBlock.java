@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 public class NormalBlock extends BlockState {
 
 	public NormalBlock(Rect location) {
@@ -10,5 +12,10 @@ public class NormalBlock extends BlockState {
 	public boolean handleCollision(BreakoutState game, Ball ball) {
 		game.removeBlock(this);
 		return true;
+	}
+	
+	@Override
+	public Color getColor() {
+		return new Color(0x80,0x00,0xff);
 	}
 }

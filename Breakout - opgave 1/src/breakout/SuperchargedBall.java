@@ -1,37 +1,20 @@
 package breakout;
 
+import java.awt.Color;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class SuperchargedBall extends Ball {
 	private int lifetime; // In milliseconds
-	private Timer timer;
 
 	public SuperchargedBall(Circle location, Vector velocity, int lifetime, BreakoutState game) {
 		super(location, velocity);
 		this.lifetime = lifetime;
-		timer(game);
-	}
-	
-	private void timer(BreakoutState game) {
-		timer = new Timer();
-		
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				lifetime -= 1000;
-				
-				if (lifetime <= 0) {
-					timer.cancel();
-					game.makeBallNormal(SuperchargedBall.this);
-				}
-			}
-		}, 0, 1000);
 	}
 	
 	@Override
-	public SuperchargedBall createBall(Circle location, Vector velocity, BreakoutState game) {
-		return new SuperchargedBall(location, velocity, 10000, game);
+	public SuperchargedBall copyBall(Ball ball, Vector newVelocity, BreakoutState game) {
+		return new SuperchargedBall(ball.getLocation(), newVelocity, ball.getLifetime(), game);
 	}
 
 	@Override
@@ -42,6 +25,20 @@ public class SuperchargedBall extends Ball {
 			Vector newVelocity = bounceOn(rect);
 			setVelocity(newVelocity);
 		}
+	}
+	
+	@Override
+	public Color getColor() {
+		return Color.magenta;
+	}
+	
+	public int getLifetime() {
+		return lifetime;
+	}
+	
+	public void updateLifetime(int elapsedTime, BreakoutState game) {
+		lifetime -= elapsedTime;
+		if (lifetime <= 0) game.makeBallNormal(this);
 	}
 
 }

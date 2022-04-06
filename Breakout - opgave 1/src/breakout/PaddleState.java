@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 /**
  * Represents the state of a paddle in the breakout game.
  *
@@ -49,5 +51,6 @@ public abstract class PaddleState {
 	 * Returns how many additional balls should be created at collision.
 	 */
 	public abstract int handleCollision(BreakoutState game);
-
+	
+	public abstract Color getColor();
 }

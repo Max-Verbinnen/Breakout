@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 public class PowerupBlock extends BlockState {
 
 	public PowerupBlock(Rect location) {
@@ -12,4 +14,10 @@ public class PowerupBlock extends BlockState {
 		game.makeBallSupercharged(ball);
 		return true;
 	}
+	
+	@Override
+	public Color getColor() {
+		return Color.magenta;
+	}
+
 }

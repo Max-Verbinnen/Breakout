@@ -175,7 +175,7 @@ public class GameView extends JPanel {
 			Point tl = c.getTopLeftPoint();
 			Point br = c.getBottomRightPoint();
 			Color color = ball.getColor();
-			paintBall(g, Color.orange, tl, br);
+			paintBall(g, color, tl, br);
 		}
 	}
 

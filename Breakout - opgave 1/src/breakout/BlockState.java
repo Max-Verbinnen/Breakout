@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 /**
  * Represents the state of a block in the breakout game.
  *
@@ -30,5 +32,7 @@ public abstract class BlockState {
 	}
 	
 	public abstract boolean handleCollision(BreakoutState game, Ball ball);
+	
+	public abstract Color getColor();
 	
 }

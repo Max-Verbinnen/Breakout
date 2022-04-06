@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 public class NormalBall extends Ball {
 
 	public NormalBall(Circle location, Vector velocity) {
@@ -7,14 +9,19 @@ public class NormalBall extends Ball {
 	}
 	
 	@Override
-	public NormalBall createBall(Circle location, Vector velocity, BreakoutState game) {
-		return new NormalBall(location, velocity);
+	public NormalBall copyBall(Ball ball, Vector newVelocity, BreakoutState game) {
+		return new NormalBall(ball.getLocation(), newVelocity);
 	}
 
 	@Override
 	public void hitBlock(Rect rect, boolean destroyed) {
 		Vector newVelocity = bounceOn(rect);
 		setVelocity(newVelocity);
+	}
+	
+	@Override
+	public Color getColor() {
+		return Color.yellow;
 	}
 
 }

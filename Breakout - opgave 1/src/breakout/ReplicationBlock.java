@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 public class ReplicationBlock extends BlockState {
 
 	public ReplicationBlock(Rect location) {
@@ -12,4 +14,10 @@ public class ReplicationBlock extends BlockState {
 		game.makePaddleReplicative();
 		return true;
 	}
+	
+	@Override
+	public Color getColor() {
+		return new Color(0xfa, 0xff, 0x7a);
+	}
+
 }
