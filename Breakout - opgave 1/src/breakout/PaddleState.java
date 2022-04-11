@@ -45,12 +45,32 @@ public abstract class PaddleState {
 		return new Rect(center.plus(halfDiag), center.plus(halfDiag.scaled(-1)));
 	}
 	
+	/**
+	 * Return a new paddle.
+	 * 
+	 * @pre | center != null
+	 * 
+	 * @post | result.getCenter().equals(center)
+	 * 
+	 * @creates | result
+	 */
 	public abstract PaddleState createPaddle(Point center);
 	
 	/**
 	 * Returns how many additional balls should be created at collision.
+	 * 
+	 * @pre | game != null
+	 * 
+	 * @post | result >= 0 || result <= 3
+	 * 
+	 * @inspects | this
 	 */
 	public abstract int handleCollision(BreakoutState game);
 	
+	/**
+	 * Return the color of the paddle.
+	 * 
+	 * @inspects | this
+	 */
 	public abstract Color getColor();
 }

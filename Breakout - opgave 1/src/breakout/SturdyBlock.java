@@ -10,6 +10,9 @@ public class SturdyBlock extends BlockState {
 		super(location);
 	}
 	
+	/**
+	 * @mutates | this
+	 */
 	@Override
 	public boolean handleCollision(BreakoutState game, Ball ball) {
 		lives--;

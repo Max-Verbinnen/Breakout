@@ -2,7 +2,7 @@ package breakout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.stream.IntStream;
 
 /**
  * Represents the current state of a breakout game.
@@ -29,6 +29,7 @@ public class BreakoutState {
 	 * @invar | balls != null
 	 * @invar | Arrays.stream(balls).allMatch(b -> getFieldInternal().contains(b.getLocation()))
 	 * @representationObject
+	 * @representationObjects
 	 */
 	private Ball[] balls;
 	/**
@@ -89,16 +90,20 @@ public class BreakoutState {
 	/**
 	 * Return the balls of this BreakoutState.
 	 * 
-	 * @creates result
+	 * @creates | result
 	 */
 	public Ball[] getBalls() {
-		return balls.clone();
+		ArrayList<Ball> ballClones = new ArrayList<Ball>();
+		for (Ball b : balls) {
+			ballClones.add(b.clone());
+		}
+		return ballClones.toArray(new Ball[] {});
 	}
 
 	/**
 	 * Return the blocks of this BreakoutState. 
 	 *
-	 * @creates result
+	 * @creates | result
 	 */
 	public BlockState[] getBlocks() {
 		return blocks.clone();
@@ -140,7 +145,13 @@ public class BreakoutState {
 	}
 
 	/**
-	 * Moet nog gedocumenteerd worden want heb deze public gemaakt.
+	 * Remove given block from blocks.
+	 * 
+	 * @pre | block != null
+	 * 
+	 * @post | Arrays.equals(getBlocks(), Arrays.stream(old(getBlocks())).filter(x -> x != block).toArray(BlockState[]::new))
+	 * 
+	 * @mutates | this
 	 */
 	public void removeBlock(BlockState block) {
 		ArrayList<BlockState> nblocks = new ArrayList<BlockState>();
@@ -153,7 +164,17 @@ public class BreakoutState {
 	}
 	
 	/**
-	 * Nieuwe methode die nog geïmplementeerd en gedocumenteerd moet worden.
+	 * Replace ball with a normal ball.
+	 * 
+	 * @pre | ball != null
+	 * 
+	 * @post | getBalls().length == old(getBalls().length)
+	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i].equals(ball))
+	 * 		 | .allMatch(i -> getBalls()[i].equals(new NormalBall(ball.getLocation(), ball.getVelocity())))
+	 * @post | IntStream.range(0, getBalls().length).filter(i -> !(old(getBalls())[i].equals(ball)))
+	 * 		 | .allMatch(i -> getBalls()[i].equals(old(getBalls())[i]))
+	 * 
+	 * @mutates | this
 	 */
 	public void makeBallNormal(Ball ball) {		
 		for (int i = 0; i < balls.length; i++) {
@@ -164,32 +185,60 @@ public class BreakoutState {
 	}
 	
 	/**
-	 * Nieuwe methode die nog geïmplementeerd en gedocumenteerd moet worden.
+	 * Replace ball with a supercharged ball.
+	 * 
+	 * @pre | ball != null
+	 * 
+	 * @post | getBalls().length == old(getBalls().length)
+	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i].equals(ball))
+	 * 		 | .allMatch(i -> getBalls()[i].equals(new SuperchargedBall(ball.getLocation(), ball.getVelocity(), 10000)))
+	 * @post | IntStream.range(0, getBalls().length).filter(i -> !(old(getBalls())[i].equals(ball)))
+	 * 		 | .allMatch(i -> getBalls()[i].equals(old(getBalls())[i]))
+	 * 
+	 * @mutates | this
 	 */
 	public void makeBallSupercharged(Ball ball) {
 		for (int i = 0; i < balls.length; i++) {
 			if (balls[i].equals(ball)) {
-				balls[i] = new SuperchargedBall(ball.getLocation(), ball.getVelocity(), 10000, this);
+				balls[i] = new SuperchargedBall(ball.getLocation(), ball.getVelocity(), 10000);
 			}
 		}
 	}
 	
 	/**
-	 * Nieuwe methode die nog geïmplementeerd en gedocumenteerd moet worden.
+	 * Make paddle normal.
+	 * 
+	 * @post | getPaddle() instanceof NormalPaddle
+	 * @post | getPaddle().getCenter().equals(old(getPaddle().getCenter()))
+	 * 
+	 * @mutates | this
 	 */
 	public void makePaddleNormal() {
 		paddle = new NormalPaddle(paddle.getCenter());
 	}
 	
 	/**
-	 * Nieuwe methode die nog geïmplementeerd en gedocumenteerd moet worden.
+	 * Make paddle replicative.
+	 * 
+	 * @post | getPaddle() instanceof ReplicatorPaddle
+	 * @post | getPaddle().getCenter().equals(old(getPaddle().getCenter()))
+	 * 
+	 * @mutates | this
 	 */
 	public void makePaddleReplicative() {
 		paddle = new ReplicatorPaddle(paddle.getCenter(), 3);
 	}
 	
 	/**
-	 * Nieuwe methode die nog geïmplementeerd en gedocumenteerd moet worden.
+	 * Add new balls to the game.
+	 * 
+	 * @pre | newBalls != null
+	 * @pre | Arrays.stream(newBalls).allMatch(b -> b != null)
+	 * 
+	 * @post | getBalls().length == old(getBalls().length) + newBalls.length
+	 * @post | IntStream.range(0, getBalls().length).allMatch(i -> (i < old(getBalls().length) ? getBalls()[i].equals(old(getBalls())[i]) : getBalls()[i].equals(newBalls[i - old(getBalls().length)])))
+	 *
+	 * @mutates | this
 	 */
 	public void addBalls(Ball[] newBalls) {
 		Ball[] finalBalls = new Ball[balls.length + newBalls.length];

@@ -14,6 +14,9 @@ public class ReplicatorPaddle extends PaddleState {
 		return new ReplicatorPaddle(center, times);
 	}
 	
+	/**
+	 * @post | result >= 0 || result <= 3
+	 */
 	public int handleCollision(BreakoutState game) {		
 		if (times - 1 == 0) {
 			game.makePaddleNormal();

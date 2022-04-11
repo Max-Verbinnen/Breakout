@@ -8,6 +8,9 @@ public class NormalBlock extends BlockState {
 		super(location);
 	}
 	
+	/**
+	 * @inspects | this
+	 */
 	@Override
 	public boolean handleCollision(BreakoutState game, Ball ball) {
 		game.removeBlock(this);

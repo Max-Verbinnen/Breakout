@@ -26,13 +26,26 @@ public abstract class BlockState {
 
 	/**
 	 * Return the rectangle occupied by this block in the field.
+	 * 
+	 * @inspects | this
 	 */
 	public Rect getLocation() {
 		return location;
 	}
 	
+	/**
+	 * Determine if block needs to be removed, return true if removed.
+	 * 
+	 * @pre | game != null
+	 * @pre | ball != null
+	 */
 	public abstract boolean handleCollision(BreakoutState game, Ball ball);
 	
+	/**
+	 * Return the color of the block.
+	 * 
+	 * @inspects | this
+	 */
 	public abstract Color getColor();
 	
 }

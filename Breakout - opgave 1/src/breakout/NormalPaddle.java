@@ -12,6 +12,10 @@ public class NormalPaddle extends PaddleState {
 		return new NormalPaddle(center);
 	}
 	
+	
+	/**
+	 * @post | result == 0
+	 */
 	public int handleCollision(BreakoutState game) {
 		return 0;
 	}
