@@ -294,11 +294,14 @@ public class BreakoutState {
 	}
 
 	private void bounceBallsOnBlocks() {
-		for (Ball ball: balls) {
+		for (int i = 0; i < balls.length; i++) {
+			Ball ball = balls[i];
+
 			for (BlockState block: blocks) {
 				if (ball == null || block == null || ball.bounceOn(block.getLocation()) == null) continue;
 				
 				boolean destroyed = block.handleCollision(this, ball);
+				ball = balls[i]; // 'Refresh' ball
 				ball.hitBlock(block.getLocation(), destroyed);
 			}
 		}

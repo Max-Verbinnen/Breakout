@@ -12,7 +12,7 @@ public class PowerupBlock extends BlockState {
 	public boolean handleCollision(BreakoutState game, Ball ball) {
 		game.removeBlock(this);
 		game.makeBallSupercharged(ball);
-		return true;
+		return false; // So that ball bounces when it hits powerup block
 	}
 	
 	@Override
