@@ -147,13 +147,16 @@ public class BreakoutState {
 	/**
 	 * Remove given block from blocks.
 	 * 
-	 * @pre | block != null
+	 * @throws IllegalArgumentException | block == null
 	 * 
 	 * @post | Arrays.equals(getBlocks(), Arrays.stream(old(getBlocks())).filter(x -> x != block).toArray(BlockState[]::new))
 	 * 
 	 * @mutates | this
 	 */
 	public void removeBlock(BlockState block) {
+		
+		if( blocks == null) throw new IllegalArgumentException();
+		
 		ArrayList<BlockState> nblocks = new ArrayList<BlockState>();
 		for( BlockState b : blocks ) {
 			if(b != block) {
@@ -166,7 +169,7 @@ public class BreakoutState {
 	/**
 	 * Replace ball with a normal ball.
 	 * 
-	 * @pre | ball != null
+	 * @throws IllegalArgumentException | ball == null
 	 * 
 	 * @post | getBalls().length == old(getBalls().length)
 	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i].equals(ball))
@@ -177,6 +180,9 @@ public class BreakoutState {
 	 * @mutates | this
 	 */
 	public void makeBallNormal(Ball ball) {		
+		
+		if( ball == null) throw new IllegalArgumentException();
+		
 		for (int i = 0; i < balls.length; i++) {
 			if (balls[i].equals(ball)) {
 				balls[i] = new NormalBall(ball.getLocation(), ball.getVelocity());
@@ -187,7 +193,7 @@ public class BreakoutState {
 	/**
 	 * Replace ball with a supercharged ball.
 	 * 
-	 * @pre | ball != null
+	 * @throws IllegalArgumentException | ball == null
 	 * 
 	 * @post | getBalls().length == old(getBalls().length)
 	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i].equals(ball))
@@ -198,6 +204,9 @@ public class BreakoutState {
 	 * @mutates | this
 	 */
 	public void makeBallSupercharged(Ball ball) {
+		
+		if( ball == null) throw new IllegalArgumentException();
+		
 		for (int i = 0; i < balls.length; i++) {
 			if (balls[i].equals(ball)) {
 				balls[i] = new SuperchargedBall(ball.getLocation(), ball.getVelocity(), 10000);
@@ -232,8 +241,8 @@ public class BreakoutState {
 	/**
 	 * Add new balls to the game.
 	 * 
-	 * @pre | newBalls != null
-	 * @pre | Arrays.stream(newBalls).allMatch(b -> b != null)
+	 * @throws IllegalArgumentException | newBalls == null
+	 * @throws IllegalArgumentException | !Arrays.stream(newBalls).allMatch(b -> b != null)
 	 * 
 	 * @post | getBalls().length == old(getBalls().length) + newBalls.length
 	 * @post | IntStream.range(0, getBalls().length).allMatch(i -> (i < old(getBalls().length) ? getBalls()[i].equals(old(getBalls())[i]) : getBalls()[i].equals(newBalls[i - old(getBalls().length)])))
@@ -241,6 +250,10 @@ public class BreakoutState {
 	 * @mutates | this
 	 */
 	public void addBalls(Ball[] newBalls) {
+		
+		if( newBalls == null) throw new IllegalArgumentException();
+		if( !Arrays.stream(newBalls).allMatch(b -> b != null)) throw new IllegalArgumentException();
+		
 		Ball[] finalBalls = new Ball[balls.length + newBalls.length];
 		
 		System.arraycopy(balls, 0, finalBalls, 0, balls.length);
@@ -337,9 +350,14 @@ public class BreakoutState {
 	/**
 	 * Move the paddle right.
 	 * 
+	 * @throws IllegalArgumentException | elapsedTime < 0
+	 * 
 	 * @mutates this
 	 */
 	public void movePaddleRight(int elapsedTime) {
+		
+		if (elapsedTime < 0) throw new IllegalArgumentException();
+		
 		Point ncenter = paddle.getCenter().plus(PADDLE_VEL.scaled(elapsedTime));
 		paddle = paddle.createPaddle(getField().minusMargin(PaddleState.WIDTH/2,0).constrain(ncenter));
 	}
@@ -347,9 +365,14 @@ public class BreakoutState {
 	/**
 	 * Move the paddle left.
 	 * 
+	 * @throws IllegalArgumentException | elapsedTime < 0
+	 * 
 	 * @mutates this
 	 */
 	public void movePaddleLeft(int elapsedTime) {
+		
+		if (elapsedTime < 0) throw new IllegalArgumentException();
+		
 		Point ncenter = paddle.getCenter().plus(PADDLE_VEL.scaled(elapsedTime).scaled(-1));
 		paddle = paddle.createPaddle(getField().minusMargin(PaddleState.WIDTH/2,0).constrain(ncenter));
 	}
