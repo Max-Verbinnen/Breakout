@@ -19,6 +19,7 @@ public abstract class PaddleState {
 
 	/**
 	 * Construct a paddle located around a given center in the field.
+	 * 
 	 * @pre | center != null
 	 * @post | getCenter().equals(center)
 	 */
@@ -39,6 +40,8 @@ public abstract class PaddleState {
 	 * @post | result != null
 	 * @post | result.getTopLeft().equals(getCenter().plus(new Vector(-WIDTH/2,-HEIGHT/2)))
 	 * @post | result.getBottomRight().equals(getCenter().plus(new Vector(WIDTH/2,HEIGHT/2)))
+	 * 
+	 * @inspects | this
 	 */
 	public Rect getLocation() {
 		Vector halfDiag = new Vector(-WIDTH/2,-HEIGHT/2);
@@ -61,7 +64,7 @@ public abstract class PaddleState {
 	 * 
 	 * @pre | game != null
 	 * 
-	 * @post | result >= 0 || result <= 3
+	 * @post | result >= 0 && result <= 3
 	 * 
 	 * @inspects | this
 	 */
@@ -71,6 +74,8 @@ public abstract class PaddleState {
 	 * Return the color of the paddle.
 	 * 
 	 * @inspects | this
+	 * 
+	 * @creates | result
 	 */
 	public abstract Color getColor();
 }

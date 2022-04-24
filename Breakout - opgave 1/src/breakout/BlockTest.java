@@ -32,7 +32,7 @@ class BlockTest {
 		b1 = new NormalBlock(r1138);
 		b2 = new ReplicationBlock(r1138);
 		b3 = new PowerupBlock(r1138);
-		b4 = new SturdyBlock(r1138);
+		b4 = new SturdyBlock(r1138, 3);
 	}
 
 	@Test

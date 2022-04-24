@@ -17,6 +17,7 @@ public abstract class BlockState {
 
 	/**
 	 * Construct a block occupying a given rectangle in the field.
+	 * 
 	 * @pre | location != null
 	 * @post | getLocation().equals(location)
 	 */
@@ -45,6 +46,8 @@ public abstract class BlockState {
 	 * Return the color of the block.
 	 * 
 	 * @inspects | this
+	 * 
+	 * @creates | result
 	 */
 	public abstract Color getColor();
 	

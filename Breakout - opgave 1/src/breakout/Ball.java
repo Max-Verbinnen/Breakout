@@ -28,7 +28,7 @@ public abstract class Ball {
 	 * @pre | location != null
 	 * @pre | velocity != null
 	 * @post | getLocation() == location
-	 * @post | getVelocity().equals(velocity) 
+	 * @post | getVelocity() == velocity
 	 */
 	public Ball(Circle location, Vector velocity) {
 		this.location = location;
@@ -80,7 +80,7 @@ public abstract class Ball {
 	/**
 	 * Return this ball's center.
 	 * 
-	 * @post | getLocation().getCenter().equals(result)
+	 * @post | result == getLocation().getCenter()
 	 * 
 	 * @inspects | this
 	 */
@@ -121,7 +121,7 @@ public abstract class Ball {
 	/**
 	 * Add the given amount of balls to the game.
 	 * 
-	 * @pre | additionalBalls <= 3
+	 * @pre | additionalBalls >= 0 && additionalBalls <= 3
 	 * @pre | game != null
 	 * 
 	 * @post | game.getBalls().length == old(game.getBalls().length) + additionalBalls
@@ -170,6 +170,7 @@ public abstract class Ball {
 	 * Return color of the ball.
 	 * 
 	 * @inspects | this
+	 * @creates | result
 	 */
 	public abstract Color getColor();
 
