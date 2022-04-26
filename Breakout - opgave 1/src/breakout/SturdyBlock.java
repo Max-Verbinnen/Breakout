@@ -7,13 +7,13 @@ import java.awt.Color;
  *
  * @immutable
  * @invar | getLocation() != null
- * @invar | getLives() >= 0
+ * @invar | getLives() >= 0 && getLives() <= 3
  */
 public class SturdyBlock extends BlockState {
 	/**
-	 * @invar | lives >= 0
+	 * @invar | lives >= 0 && lives <= 3
 	 */
-	private int lives;
+	private final int lives;
 	private final Color[] COLORS = {Color.LIGHT_GRAY, Color.GRAY, Color.DARK_GRAY};
 
 	/**
@@ -43,15 +43,13 @@ public class SturdyBlock extends BlockState {
 	 * 
 	 * @pre | game != null
 	 * @pre | ball != null
-	 * 
-	 * @mutates | this
 	 */
 	@Override
 	public boolean handleCollision(BreakoutState game, Ball ball) {
-		lives--;
-		if (lives == 0) game.removeBlock(this);
+		if (lives > 1) game.replaceBlock(this, new SturdyBlock(getLocation(), lives - 1));
+		else game.removeBlock(this);
 		
-		return lives == 0;
+		return lives <= 1;
 	}
 	
 	/**

@@ -31,7 +31,7 @@ public class ReplicationBlock extends BlockState {
 	@Override
 	public boolean handleCollision(BreakoutState game, Ball ball) {
 		game.removeBlock(this);
-		game.makePaddleReplicative();
+		game.replacePaddle(new ReplicatorPaddle(game.getPaddle().getCenter(), 3));
 		return true;
 	}
 	

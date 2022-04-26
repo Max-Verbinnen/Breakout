@@ -124,6 +124,7 @@ public class BreakoutState {
 	
 	/**
 	 * Return a rectangle representing the game field.
+	 * 
 	 * @post | result != null
 	 * @post | result.getTopLeft().equals(Point.ORIGIN)
 	 * @post | result.getBottomRight().equals(getBottomRight())
@@ -174,7 +175,7 @@ public class BreakoutState {
 	 */
 	public void makeBallNormal(Ball ball) {		
 		
-		if( ball == null) throw new IllegalArgumentException();
+		if (ball == null) throw new IllegalArgumentException();
 		
 		for (int i = 0; i < balls.length; i++) {
 			if (balls[i].equals(ball)) {
@@ -198,7 +199,7 @@ public class BreakoutState {
 	 */
 	public void makeBallSupercharged(Ball ball) {
 		
-		if( ball == null) throw new IllegalArgumentException();
+		if (ball == null) throw new IllegalArgumentException();
 		
 		for (int i = 0; i < balls.length; i++) {
 			if (balls[i].equals(ball)) {
@@ -208,27 +209,43 @@ public class BreakoutState {
 	}
 	
 	/**
-	 * Make paddle normal.
+	 * Replace `oldBlock` with `newBlock`.
 	 * 
-	 * @post | getPaddle() instanceof NormalPaddle
-	 * @post | getPaddle().getCenter().equals(old(getPaddle().getCenter()))
+	 * @throws IllegalArgumentException | oldBlock == null
+	 * @throws IllegalArgumentException | newBlock == null
+	 * 
+	 * @post | getBlocks().length == old(getBlocks().length)
+	 * @post | IntStream.range(0, getBlocks().length).filter(i -> old(getBlocks())[i].equals(oldBlock))
+	 * 		 | .allMatch(i -> getBlocks()[i].equals(newBlock))
+	 * @post | IntStream.range(0, getBlocks().length).filter(i -> !(old(getBlocks())[i].equals(newBlock)))
+	 * 		 | .allMatch(i -> getBlocks()[i].equals(old(getBlocks())[i]))
 	 * 
 	 * @mutates | this
 	 */
-	public void makePaddleNormal() {
-		paddle = new NormalPaddle(paddle.getCenter());
+	public void replaceBlock(BlockState oldBlock, BlockState newBlock) {
+		if (oldBlock == null) throw new IllegalArgumentException();
+		if (newBlock == null) throw new IllegalArgumentException();
+		 
+		for (int i = 0; i < blocks.length; i++) {
+			if (blocks[i] == oldBlock) {
+				blocks[i] = newBlock;
+			}
+		}
 	}
 	
 	/**
-	 * Make paddle replicative.
+	 * Replace current paddle with new paddle.
 	 * 
-	 * @post | getPaddle() instanceof ReplicatorPaddle
+	 * @throws IllegalArgumentException | newPaddle == null
+	 * 
 	 * @post | getPaddle().getCenter().equals(old(getPaddle().getCenter()))
+	 * @post | getPaddle() == newPaddle
 	 * 
 	 * @mutates | this
 	 */
-	public void makePaddleReplicative() {
-		paddle = new ReplicatorPaddle(paddle.getCenter(), 3);
+	public void replacePaddle(PaddleState newPaddle) {
+		if (newPaddle == null) throw new IllegalArgumentException();
+		paddle = newPaddle;
 	}
 	
 	/**

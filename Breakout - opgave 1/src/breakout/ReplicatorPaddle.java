@@ -14,7 +14,7 @@ public class ReplicatorPaddle extends PaddleState {
 	/**
 	 * @invar | times >= 0
 	 */
-	private int times;
+	private final int times;
 	
 	/**
 	 * Construct a replicator paddle located around a given center in the field.
@@ -61,12 +61,11 @@ public class ReplicatorPaddle extends PaddleState {
 	 * @inspects | this
 	 */
 	@Override
-	public int handleCollision(BreakoutState game) {		
-		if (times - 1 == 0) {
-			game.makePaddleNormal();
-		}
+	public int handleCollision(BreakoutState game) {
+		game.replacePaddle(new ReplicatorPaddle(getCenter(), times - 1));
+		if (times == 1) game.replacePaddle(new NormalPaddle(getCenter()));
 		
-		return times--;
+		return times;
 	}
 	
 	/**
