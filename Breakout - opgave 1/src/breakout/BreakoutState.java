@@ -12,7 +12,6 @@ import java.util.stream.IntStream;
  * @invar | getPaddle() != null
  * @invar | getBottomRight() != null
  * @invar | Point.ORIGIN.isUpAndLeftFrom(getBottomRight())
- * @invar | Arrays.stream(getBalls()).allMatch(b -> getField().contains(b.getLocation()))
  * @invar | Arrays.stream(getBlocks()).allMatch(b -> getField().contains(b.getLocation()))
  * @invar | getField().contains(getPaddle().getLocation())
  */
@@ -27,9 +26,7 @@ public class BreakoutState {
 	private final Point bottomRight;
 	/**
 	 * @invar | balls != null
-	 * @invar | Arrays.stream(balls).allMatch(b -> getFieldInternal().contains(b.getLocation()))
 	 * @representationObject
-	 * @representationObjects
 	 */
 	private Ball[] balls;
 	/**
@@ -93,11 +90,7 @@ public class BreakoutState {
 	 * @creates | result
 	 */
 	public Ball[] getBalls() {
-		ArrayList<Ball> ballClones = new ArrayList<Ball>();
-		for (Ball b : balls) {
-			ballClones.add(b.clone());
-		}
-		return ballClones.toArray(new Ball[] {});
+		return balls.clone();
 	}
 
 	/**

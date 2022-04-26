@@ -79,7 +79,7 @@ class BallTest {
 		b2.updateLifetime(1000, dummyGame); //Does nothing
 		b2s.updateLifetime(5000, dummyGame);
 		assertEquals(b2s.getLifetime(), 5000);
-		b2s.updateLifetime(6000, dummyGame);
+		b2s.updateLifetime(5025, dummyGame);
 	}
 
 	@Test
