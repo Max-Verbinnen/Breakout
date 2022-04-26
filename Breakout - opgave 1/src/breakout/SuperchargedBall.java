@@ -106,24 +106,4 @@ public class SuperchargedBall extends Ball {
 		if (lifetime <= 0) game.makeBallNormal(this);
 	}
 
-	/**
-	 * Create a clone of the ball.
-	 * 
-	 * @creates | result
-	 */
-	@Override
-	public Ball clone() {
-		return new SuperchargedBall(getLocation(), getVelocity(), lifetime);
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if (other instanceof SuperchargedBall otherBall) {
-			if (this.getLocation().equals(otherBall.getLocation()) && this.getVelocity().equals(otherBall.getVelocity()) && this.getLifetime() == otherBall.getLifetime()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 }

@@ -66,24 +66,4 @@ public class NormalBall extends Ball {
 		return Color.yellow;
 	}
 
-	/**
-	 * Create a clone of the ball.
-	 * 
-	 * @creates | result
-	 */
-	@Override
-	public Ball clone() {
-		return new NormalBall(getLocation(), getVelocity());
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if (other instanceof NormalBall otherBall) {
-			if (this.getLocation().equals(otherBall.getLocation()) && this.getVelocity().equals(otherBall.getVelocity())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 }

@@ -193,14 +193,4 @@ public abstract class Ball {
 	 */
 	public void updateLifetime(int elapsedTime, BreakoutState game) { };
 	
-	/**
-	 * Create a clone of the ball.
-	 * 
-	 * @creates | result
-	 */
-	public abstract Ball clone();
-	
-	@Override
-	public abstract boolean equals(Object other);
-	
 }

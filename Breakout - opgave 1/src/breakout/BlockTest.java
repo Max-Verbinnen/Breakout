@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class BlockTest {
 	Point p11;
-	Point p05;
+	Point p29;
 	Point p38;
 	Point pm14;
 	
@@ -24,7 +24,7 @@ class BlockTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		p11 = new Point(1,1);
-		p05 = new Point(0,5);
+		p29 = new Point(2,9);
 		p38 = new Point(3,8);
 		pm14 = new Point(-1,4);
 		r1138 = new Rect(p11,p38);
@@ -42,8 +42,9 @@ class BlockTest {
 
 	@Test
 	void testHandleCollision() {
-		Ball ball1 = new NormalBall(new Circle(p38, 2), new Vector(10, 10));
-		BreakoutState dummyGame = new BreakoutState(new Ball[] {ball1}, new BlockState[] {b1, b2, b3, b4}, new Point(10000, 10000), new NormalPaddle(new Point(5000, 5000)));
+		Ball ball1 = new NormalBall(new Circle(p29, 2), new Vector(10, -10));
+		Ball ball2 = new NormalBall(new Circle(p38, 2), new Vector(10, 10));
+		BreakoutState dummyGame = new BreakoutState(new Ball[] {ball1, ball2}, new BlockState[] {b1, b2, b3, b4}, new Point(10000, 10000), new NormalPaddle(new Point(5000, 5000)));
 		
 		b1.handleCollision(dummyGame, ball1);
 		assertEquals(3, dummyGame.getBlocks().length);

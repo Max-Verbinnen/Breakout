@@ -97,20 +97,4 @@ class BallTest {
 		b1s.hitBlock(r1138, false);
 		assertEquals(b1s.getVelocity(), new Vector(-10, 10));
 	}
-	
-	@Test
-	void testEquals() {
-		assertEquals(b1, new NormalBall(b1.getLocation(), b1.getVelocity()));
-		assertNotEquals(b1, r1138);
-		assertNotEquals(b1, b2);
-		assertNotEquals(b1, new NormalBall(b1.getLocation(), b2.getVelocity()));
-		
-		assertNotEquals(b1, b1s);
-		
-		assertEquals(b1s, new SuperchargedBall(b1s.getLocation(), b1s.getVelocity(), b1s.getLifetime()));
-		assertNotEquals(b1s, r1138);
-		assertNotEquals(b1s, b2s);
-		assertNotEquals(b1s, new SuperchargedBall(b1s.getLocation(), b2s.getVelocity(), b1s.getLifetime()));
-		assertNotEquals(b1s, new SuperchargedBall(b1s.getLocation(), b1s.getVelocity(), 5000));
-	}
 }
