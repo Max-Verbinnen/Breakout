@@ -166,10 +166,10 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException | ball == null
 	 * 
 	 * @post | getBalls().length == old(getBalls().length)
-	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i].equals(ball))
-	 * 		 | .allMatch(i -> getBalls()[i].equals(new NormalBall(ball.getLocation(), ball.getVelocity())))
-	 * @post | IntStream.range(0, getBalls().length).filter(i -> !(old(getBalls())[i].equals(ball)))
-	 * 		 | .allMatch(i -> getBalls()[i].equals(old(getBalls())[i]))
+	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i] == ball)
+	 * 		 | .allMatch(i -> getBalls()[i] instanceof NormalBall)
+	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i] != ball)
+	 * 		 | .allMatch(i -> getBalls()[i] == old(getBalls())[i])
 	 * 
 	 * @mutates | this
 	 */
@@ -190,10 +190,10 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException | ball == null
 	 * 
 	 * @post | getBalls().length == old(getBalls().length)
-	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i].equals(ball))
-	 * 		 | .allMatch(i -> getBalls()[i].equals(new SuperchargedBall(ball.getLocation(), ball.getVelocity(), 10000)))
-	 * @post | IntStream.range(0, getBalls().length).filter(i -> !(old(getBalls())[i].equals(ball)))
-	 * 		 | .allMatch(i -> getBalls()[i].equals(old(getBalls())[i]))
+	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i] == ball)
+	 * 		 | .allMatch(i -> getBalls()[i] instanceof SuperchargedBall)
+	 * @post | IntStream.range(0, getBalls().length).filter(i -> old(getBalls())[i] != ball)
+	 * 		 | .allMatch(i -> getBalls()[i] == old(getBalls())[i])
 	 * 
 	 * @mutates | this
 	 */
@@ -255,7 +255,7 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException | !Arrays.stream(newBalls).allMatch(b -> b != null)
 	 * 
 	 * @post | getBalls().length == old(getBalls().length) + newBalls.length
-	 * @post | IntStream.range(0, getBalls().length).allMatch(i -> (i < old(getBalls().length) ? getBalls()[i].equals(old(getBalls())[i]) : getBalls()[i].equals(newBalls[i - old(getBalls().length)])))
+	 * @post | IntStream.range(0, getBalls().length).allMatch(i -> (i < old(getBalls().length) ? getBalls()[i] == old(getBalls())[i] : getBalls()[i] == newBalls[i - old(getBalls().length)]))
 	 *
 	 * @mutates | this
 	 */
