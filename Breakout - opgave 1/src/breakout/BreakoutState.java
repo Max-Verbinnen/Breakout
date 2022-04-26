@@ -215,10 +215,10 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException | newBlock == null
 	 * 
 	 * @post | getBlocks().length == old(getBlocks().length)
-	 * @post | IntStream.range(0, getBlocks().length).filter(i -> old(getBlocks())[i].equals(oldBlock))
-	 * 		 | .allMatch(i -> getBlocks()[i].equals(newBlock))
-	 * @post | IntStream.range(0, getBlocks().length).filter(i -> !(old(getBlocks())[i].equals(newBlock)))
-	 * 		 | .allMatch(i -> getBlocks()[i].equals(old(getBlocks())[i]))
+	 * @post | IntStream.range(0, getBlocks().length).filter(i -> old(getBlocks())[i] == oldBlock)
+	 * 		 | .allMatch(i -> getBlocks()[i] == newBlock)
+	 * @post | IntStream.range(0, getBlocks().length).filter(i -> old(getBlocks())[i] != oldBlock)
+	 * 		 | .allMatch(i -> getBlocks()[i] == old(getBlocks())[i])
 	 * 
 	 * @mutates | this
 	 */

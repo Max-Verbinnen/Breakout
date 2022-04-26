@@ -46,17 +46,17 @@ class BlockTest {
 		Ball ball2 = new NormalBall(new Circle(p38, 2), new Vector(10, 10));
 		BreakoutState dummyGame = new BreakoutState(new Ball[] {ball1, ball2}, new BlockState[] {b1, b2, b3, b4}, new Point(10000, 10000), new NormalPaddle(new Point(5000, 5000)));
 		
-		b1.handleCollision(dummyGame, ball1);
+		dummyGame.getBlocks()[0].handleCollision(dummyGame, ball1);
 		assertEquals(3, dummyGame.getBlocks().length);
-		b2.handleCollision(dummyGame, ball1);
+		dummyGame.getBlocks()[0].handleCollision(dummyGame, ball1);
 		assertEquals(2, dummyGame.getBlocks().length);
-		b3.handleCollision(dummyGame, ball1);
+		dummyGame.getBlocks()[0].handleCollision(dummyGame, ball1);
 		assertEquals(1, dummyGame.getBlocks().length);
-		b4.handleCollision(dummyGame, ball1);
+		dummyGame.getBlocks()[0].handleCollision(dummyGame, ball1);
 		assertEquals(1, dummyGame.getBlocks().length);
-		b4.handleCollision(dummyGame, ball1);
+		dummyGame.getBlocks()[0].handleCollision(dummyGame, ball1);
 		assertEquals(1, dummyGame.getBlocks().length);
-		b4.handleCollision(dummyGame, ball1);
+		dummyGame.getBlocks()[0].handleCollision(dummyGame, ball1);
 		assertEquals(0, dummyGame.getBlocks().length);
 	}
 	

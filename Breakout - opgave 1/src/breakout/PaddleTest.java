@@ -39,11 +39,11 @@ class PaddleTest {
 	@Test 
 	void testHandleCollision() {
 		BreakoutState dummyGame = new BreakoutState(new Ball[0], new BlockState[0], new Point(10000, 10000), p2);
-		assertEquals(p2.handleCollision(dummyGame), 3);
+		assertEquals(dummyGame.getPaddle().handleCollision(dummyGame), 3);
 		assertTrue(dummyGame.getPaddle() instanceof ReplicatorPaddle);
-		assertEquals(p2.handleCollision(dummyGame), 2);		
+		assertEquals(dummyGame.getPaddle().handleCollision(dummyGame), 2);		
 		assertTrue(dummyGame.getPaddle() instanceof ReplicatorPaddle);
-		assertEquals(p2.handleCollision(dummyGame), 1);		
+		assertEquals(dummyGame.getPaddle().handleCollision(dummyGame), 1);		
 		assertTrue(dummyGame.getPaddle() instanceof NormalPaddle);
 		
 		assertEquals(p1.handleCollision(dummyGame), 0);	
