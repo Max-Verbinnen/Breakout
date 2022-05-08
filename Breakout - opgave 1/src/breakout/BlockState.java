@@ -6,10 +6,10 @@ import java.awt.Color;
  * Represents the state of a block in the breakout game.
  *
  * @immutable
- * @invar | getLocation() != null
+ * @invar getLocation() != null
  */
 public abstract class BlockState {
-	
+
 	/**
 	 * @invar | location != null
 	 */
@@ -17,9 +17,8 @@ public abstract class BlockState {
 
 	/**
 	 * Construct a block occupying a given rectangle in the field.
-	 * 
-	 * @pre | location != null
-	 * @post | getLocation().equals(location)
+	 * | @pre | location != null
+	 * | @post | getLocation().equals(location)
 	 */
 	public BlockState(Rect location) {
 		this.location = location;
@@ -27,28 +26,38 @@ public abstract class BlockState {
 
 	/**
 	 * Return the rectangle occupied by this block in the field.
-	 * 
-	 * @inspects | this
 	 */
 	public Rect getLocation() {
 		return location;
 	}
-	
+
 	/**
-	 * Determine if block needs to be removed, return true if removed.
+	 * Return the block state after getting hit by the ball, null if block is destroyed.
 	 * 
-	 * @pre | game != null
-	 * @pre | ball != null
+	 * | @post (result == null || result.getLocation().equals(getLocation()))
 	 */
-	public abstract boolean handleCollision(BreakoutState game, Ball ball);
-	
+	public abstract BlockState blockStateAfterHit();
+
 	/**
-	 * Return the color of the block.
+	 * Return the block state after getting hit by the ball, based on the old ball
+	 * state. Return null if not hit.
 	 * 
-	 * @inspects | this
+	 * @pre | ballState != null
+	 */
+	public abstract Ball ballStateAfterHit(Ball ballState);
+
+	/**
+	 * Return the paddle state after getting hit by the ball, based on the old
+	 * paddle state.
 	 * 
-	 * @creates | result
+	 * @pre | paddleState != null
+	 */
+	public abstract PaddleState paddleStateAfterHit(PaddleState paddleState);
+
+	/**
+	 * Return this block state's color.
+	 * 
+	 * @post result != null
 	 */
 	public abstract Color getColor();
-	
 }

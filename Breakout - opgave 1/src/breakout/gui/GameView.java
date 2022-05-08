@@ -15,7 +15,6 @@ import breakout.Ball;
 import breakout.BlockState;
 import breakout.BreakoutFacade;
 import breakout.BreakoutState;
-import breakout.Circle;
 import breakout.Point;
 import breakout.PaddleState;
 import breakout.Rect;
@@ -171,10 +170,12 @@ public class GameView extends JPanel {
 	private void paintBalls(Graphics g) {
 		// ball
 		for (Ball ball : facade.getBalls(breakoutState)) {
-			Circle c = new Circle(facade.getCenter(ball), facade.getDiameter(ball));
-			Point tl = c.getTopLeftPoint();
-			Point br = c.getBottomRightPoint();
-			Color color = ball.getColor();
+			Point center = facade.getCenter(ball);
+			int diam = facade.getDiameter(ball);
+			int radius = diam/2;
+			Point tl = center.plus(new Vector(-radius,-radius));
+			Point br = center.plus(new Vector(radius,radius));
+			Color color = facade.getColor(ball);
 			paintBall(g, color, tl, br);
 		}
 	}

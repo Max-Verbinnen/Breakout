@@ -177,7 +177,7 @@ public class Rect {
 
 	/**
 	 * Move the argument circle by the least amount so that it falls entirely within this rect.
-	 *
+	 * 
 	 * @pre | c.getDiameter() < getWidth()
 	 * @post | contains(result)
 	 * @post | result.getCenter().equals(this.minusMargin(c.getRadius()).constrain(c.getCenter()))

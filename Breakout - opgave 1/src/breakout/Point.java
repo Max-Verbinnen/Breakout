@@ -10,8 +10,8 @@ public class Point {
 	private final int x;
 	private final int y;
 
-	public static final Point ORIGIN = new Point(0,0);
-	
+	public static final Point ORIGIN = new Point(0, 0);
+
 	/**
 	 * Return a new Point with given x and y coordinates.
 	 * 
@@ -19,7 +19,8 @@ public class Point {
 	 * @post | getY() == y
 	 */
 	public Point(int x, int y) {
-		this.x = x; this.y = y;
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class Point {
 	 * @post | result.getX() == getX() + v.getX()
 	 * @post | result.getY() == getY() + v.getY()
 	 */
-	public Point plus(Vector v) { 
+	public Point plus(Vector v) {
 		return new Point(x + v.getX(), y + v.getY());
 	}
 
@@ -82,7 +83,19 @@ public class Point {
 	}
 
 	/**
+	 * Return the vector obtained by subtracting a point `p` from this point.
+	 * 
+	 * @pre | p != null
+	 * @post | result != null
+	 * @post | result.getX() == getX() - p.getX()
+	 * @post | result.getY() == getY() - p.getY()
+	 */
+	public Vector minus(Point p) {
+		return new Vector(getX()-p.getX(), getY() - p.getY());
+	}
+	/**
 	 * Return a string representation of this point.
+	 * 
 	 * @post | result != null
 	 */
 	public String toString() {
@@ -90,28 +103,32 @@ public class Point {
 	}
 
 	/**
-	 * Return the point obtained by mirroring this point over the vertical line through point (xmirror,0).
+	 * Return the point obtained by mirroring this point over the vertical line
+	 * through point (xmirror,0).
 	 * 
-	 * @post | result != null 
-	 * @post | result.getY() == this.getY() 
-	 * @post | result.getX() == 2*xmirror - getX() 
+	 * @post | result != null
+	 * @post | result.getY() == this.getY()
+	 * @post | result.getX() == 2*xmirror - getX()
 	 */
 	public Point reflectVertical(int xmirror) {
-		return new Point(2*xmirror-x,y);
+		return new Point(2 * xmirror - x, y);
 	}
+
 	/**
-	 * Return the point obtained by mirroring this point over the horizontal line through point (0,ymirror).
+	 * Return the point obtained by mirroring this point over the horizontal line
+	 * through point (0,ymirror).
 	 * 
-	 * @post | result != null 
-	 * @post | result.getX() == this.getX() 
-	 * @post | result.getY() == 2*ymirror - getY() 
+	 * @post | result != null
+	 * @post | result.getX() == this.getX()
+	 * @post | result.getY() == 2*ymirror - getY()
 	 */
 	public Point reflectHorizontal(int ymirror) {
-		return new Point(x,2*ymirror-y);
+		return new Point(x, 2 * ymirror - y);
 	}
-	
+
 	/**
-	 * Return whether this point is up and left form a given other point. 
+	 * Return whether this point is up and left form a given other point.
+	 * 
 	 * @pre | other != null
 	 * @post | result == (this.getX() <= other.getX() && this.getY() <= other.getY())
 	 */

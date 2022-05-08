@@ -9,7 +9,7 @@ import java.awt.Color;
  * @invar | getCenter() != null
  */
 public abstract class PaddleState {
-	
+
 	public static final int HEIGHT = 500;
 	public static final int WIDTH = 3000;
 	/**
@@ -26,7 +26,7 @@ public abstract class PaddleState {
 	public PaddleState(Point center) {
 		this.center = center;
 	}
-	
+
 	/**
 	 * Return the center point of this paddle.
 	 */
@@ -40,42 +40,44 @@ public abstract class PaddleState {
 	 * @post | result != null
 	 * @post | result.getTopLeft().equals(getCenter().plus(new Vector(-WIDTH/2,-HEIGHT/2)))
 	 * @post | result.getBottomRight().equals(getCenter().plus(new Vector(WIDTH/2,HEIGHT/2)))
-	 * 
-	 * @inspects | this
 	 */
 	public Rect getLocation() {
-		Vector halfDiag = new Vector(-WIDTH/2,-HEIGHT/2);
+		Vector halfDiag = new Vector(-WIDTH / 2, -HEIGHT / 2);
 		return new Rect(center.plus(halfDiag), center.plus(halfDiag.scaled(-1)));
 	}
-	
+
 	/**
-	 * Return a new paddle.
+	 * Return the amount of balls should be generated after hitting this paddle.
 	 * 
-	 * @pre | center != null
-	 * 
-	 * @post | result.getCenter().equals(center)
-	 * 
-	 * @creates | result
+	 * @post | result > 0
+	 * @post | result < BreakoutState.MAX_BALL_REPLICATE
 	 */
-	public abstract PaddleState createPaddle(Point center);
-	
+	public abstract int numberOfBallsAfterHit();
+
 	/**
-	 * Returns how many additional balls should be created at collision.
+	 * Return the new state of the paddle after it is hit by a ball.
 	 * 
-	 * @pre | game != null
-	 * 
-	 * @post | result >= 0 && result <= 3
-	 * 
-	 * @inspects | this
+	 * @post | result != null
+	 * @post | result.getLocation().equals(getLocation())
 	 */
-	public abstract int handleCollision(BreakoutState game);
-	
+	public abstract PaddleState stateAfterHit();
+
 	/**
-	 * Return the color of the paddle.
+	 * Return the color which the paddle should be painted in.
 	 * 
-	 * @inspects | this
-	 * 
-	 * @creates | result
+	 * @post | result != null
 	 */
 	public abstract Color getColor();
+
+	/**
+	 * Return a copy of this PaddleState moved in a given direction, within a given
+	 * field.
+	 * 
+	 * @pre | v != null
+	 * @pre | field != null
+	 * @post | result != null
+	 * @post | field.contains(result.getLocation())
+	 */
+	public abstract PaddleState move(Vector v, Rect field);
+
 }

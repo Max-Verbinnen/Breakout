@@ -1,7 +1,7 @@
 package breakout;
 
 /**
- * Represents a 2-dimensional integer vector. 
+ * Represents a 2-dimensional integer vector.
  *
  * @immutable
  */
@@ -10,10 +10,10 @@ public class Vector {
 	private final int x;
 	private final int y;
 
-	public static final Vector DOWN = new Vector(0,1);
-	public static final Vector UP = new Vector(0,-1);
-	public static final Vector RIGHT = new Vector(1,0);
-	public static final Vector LEFT = new Vector(-1,0);
+	public static final Vector DOWN = new Vector(0, 1);
+	public static final Vector UP = new Vector(0, -1);
+	public static final Vector RIGHT = new Vector(1, 0);
+	public static final Vector LEFT = new Vector(-1, 0);
 
 	/**
 	 * Return a new Coordinate with given x and y coordinates.
@@ -22,7 +22,8 @@ public class Vector {
 	 * @post | getY() == y
 	 */
 	public Vector(int x, int y) {
-		this.x = x; this.y = y;
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -61,7 +62,8 @@ public class Vector {
 	}
 
 	/**
-	 * Return the Coordinate obtained by scaling this coordinate with a given factor. 
+	 * Return the Coordinate obtained by scaling this coordinate with a given
+	 * factor.
 	 * 
 	 * @post | result != null
 	 * @post | result.getX() == getX() * factor
@@ -79,12 +81,13 @@ public class Vector {
 	 * @post | result.getX() == getX() + other.getX()
 	 * @post | result.getY() == getY() + other.getY()
 	 */
-	public Vector plus(Vector other) { 
+	public Vector plus(Vector other) {
 		return new Vector(x + other.x, y + other.y);
 	}
 
 	/**
-	 * Return the Coordinate obtained by subtracting vector `other` from this vector.
+	 * Return the Coordinate obtained by subtracting vector `other` from this
+	 * vector.
 	 * 
 	 * @pre | other != null
 	 * @post | result != null
@@ -92,22 +95,23 @@ public class Vector {
 	 * @post | result.getY() == getY() - other.getY()
 	 */
 	public Vector minus(Vector other) {
-		return new Vector(x - other.x, y - other.y); 
+		return new Vector(x - other.x, y - other.y);
 	}
 
 	/**
 	 * Return a string representation of this vector.
+	 * 
 	 * @post | result != null
 	 */
 	public String toString() {
-		return "(" + x + "," + y + ")"; 
+		return "(" + x + "," + y + ")";
 	}
 
 	/**
 	 * Compute the dot product of this vector with vector `other`.
 	 * 
 	 * @pre | v != null
-	 * @post | result == getX() * v.getX() + getY() * v.getY() 
+	 * @post | result == getX() * v.getX() + getY() * v.getY()
 	 */
 	public int product(Vector v) {
 		return v.x * x + v.y * y;
@@ -121,27 +125,28 @@ public class Vector {
 	public int getSquareLength() {
 		return this.product(this);
 	}
-	
+
 	/**
 	 * Mirror this vector over a given normal vector and return the result.
 	 * 
 	 * @pre | m != null
 	 * @pre | m.getSquareLength() == 1
 	 * @post | result != null
-	 * @post | result.equals(this.minus(m.scaled(2*this.product(m)))) 
+	 * @post | result.equals(this.minus(m.scaled(2*this.product(m))))
 	 */
 	public Vector mirrorOver(Vector m) {
-		return this.minus(m.scaled(2*this.product(m)));
+		return this.minus(m.scaled(2 * this.product(m)));
 	}
 
 	/**
-	 * Scale this vector down by dividing its coordinates by the given factor. 
+	 * Scale this vector down by dividing its coordinates by the given factor.
+	 * 
 	 * @pre | d != 0
 	 * @post | result != null
 	 * @post | result.getX() == getX() / d
 	 * @post | result.getY() == getY() / d
 	 */
 	public Vector scaledDiv(int d) {
-		return new Vector(getX()/d,getY()/d);
+		return new Vector(getX() / d, getY() / d);
 	}
 }
