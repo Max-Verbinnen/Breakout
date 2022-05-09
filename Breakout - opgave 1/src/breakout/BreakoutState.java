@@ -3,6 +3,12 @@ package breakout;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import radioactivity.Ball;
+import utils.Circle;
+import utils.Point;
+import utils.Rect;
+import utils.Vector;
+
 //import breakout.gui.GameView;
 
 /**
@@ -18,7 +24,7 @@ import java.util.Arrays;
  */
 public class BreakoutState {
 
-	private static final Vector PADDLE_VEL = new Vector(10, 0);
+	private static final Vector PADDLE_VEL = new Vector(20, 0);
 	public static final int MAX_BALL_REPLICATE = 5;
 	private static final Vector[] BALL_VEL_VARIATIONS = new Vector[] { new Vector(0, 0), new Vector(2, -2),
 			new Vector(-2, 2), new Vector(2, 2), new Vector(-2, -2) };

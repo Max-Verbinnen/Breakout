@@ -2,6 +2,10 @@ package breakout;
 
 import java.util.ArrayList;
 
+import radioactivity.Ball;
+import utils.Point;
+import utils.Vector;
+
 public class GameMap {
 
 	private static final int INIT_BALL_DIAMETER = 700;

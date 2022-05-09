@@ -1,4 +1,4 @@
-package breakout;
+package utils;
 
 /**
  * Represents a circle in a 2-dimensional integer coordinate system.

@@ -1,4 +1,4 @@
-package breakout;
+package utils;
 
 /**
  * This class represents a point on a 2-dimensional integer grid.

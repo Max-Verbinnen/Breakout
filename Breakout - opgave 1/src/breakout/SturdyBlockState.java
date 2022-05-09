@@ -2,6 +2,9 @@ package breakout;
 
 import java.awt.Color;
 
+import radioactivity.Ball;
+import utils.Rect;
+
 public class SturdyBlockState extends BlockState {
 
 	private static final Color COLOR1 = new Color(0x80, 0x00, 0xff);

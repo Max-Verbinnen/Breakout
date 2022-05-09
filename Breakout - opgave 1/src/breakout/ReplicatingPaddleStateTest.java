@@ -7,6 +7,10 @@ import java.awt.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import utils.Point;
+import utils.Rect;
+import utils.Vector;
+
 class ReplicatingPaddleStateTest {
 	Point loc = new Point(2000,1000);
 	Rect fieldRect = new Rect(new Point(0,0),new Point(10000,10000));

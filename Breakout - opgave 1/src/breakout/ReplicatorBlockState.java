@@ -2,6 +2,8 @@ package breakout;
 
 import java.awt.Color;
 
+import utils.Rect;
+
 public class ReplicatorBlockState extends NormalBlockState {
 
 	private static final Color COLOR = new Color(0xcf, 0x5e, 0x51);

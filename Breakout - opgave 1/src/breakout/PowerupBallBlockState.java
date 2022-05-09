@@ -2,6 +2,10 @@ package breakout;
 
 import java.awt.Color;
 
+import radioactivity.Ball;
+import radioactivity.SuperChargedBall;
+import utils.Rect;
+
 public class PowerupBallBlockState extends NormalBlockState {
 
 	private static final int SUPERCHARGED_BALL_LIFETIME = 10000;

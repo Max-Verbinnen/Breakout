@@ -1,4 +1,4 @@
-package breakout;
+package utils;
 
 /**
  * Represents a 2-dimensional integer vector.

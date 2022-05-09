@@ -11,14 +11,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import breakout.Ball;
 import breakout.BlockState;
 import breakout.BreakoutFacade;
 import breakout.BreakoutState;
-import breakout.Point;
 import breakout.PaddleState;
-import breakout.Rect;
-import breakout.Vector;
+import radioactivity.Ball;
+import utils.Point;
+import utils.Rect;
+import utils.Vector;
 
 @SuppressWarnings("serial")
 public class GameView extends JPanel {

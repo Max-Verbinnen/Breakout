@@ -2,6 +2,10 @@ package breakout;
 
 import java.awt.Color;
 
+import utils.Point;
+import utils.Rect;
+import utils.Vector;
+
 public class NormalPaddleState extends PaddleState {
 
 	private static final Color COLOR = new Color(0x99, 0xff, 0xff);
