@@ -1,4 +1,4 @@
-package radioactivity;
+package breakout;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,12 +7,13 @@ import java.awt.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import radioactivity.Ball;
 import utils.Circle;
 import utils.Point;
 import utils.Rect;
 import utils.Vector;
 
-class NormalBallTest {
+class SuperChargedBallTest {
 	Point p11;
 	Point p05;
 	Point p38;
@@ -26,6 +27,7 @@ class NormalBallTest {
 	Circle c052;
 	Circle c389;
 	Ball b1;
+	Ball b2;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -38,7 +40,8 @@ class NormalBallTest {
 		c052 = new Circle(p05, 2);
 		c389 = new Circle(p38, 9);
 		v1010 = new Vector(10, 10);
-		b1 = new NormalBall(c052, v1010);
+		b1 = new SuperChargedBall(c052, v1010,1000);
+		b2 = new SuperChargedBall(c052, v1010,-1000);
 	}
 
 	@Test
@@ -61,9 +64,16 @@ class NormalBallTest {
 	}
 
 	@Test
+	void testHitBlockAfterLifetime() {
+		b2.hitBlock(r1138, true);
+		assertEquals(b2.getVelocity(),new Vector(-10,10));
+		assertEquals(b2.getLocation(), c052);
+	}
+	
+	@Test
 	void testHitBlockDestroyed() {
 		b1.hitBlock(r1138, true);
-		assertEquals(b1.getVelocity(),new Vector(-10,10));
+		assertEquals(b1.getVelocity(),new Vector(10,10));
 		assertEquals(b1.getLocation(), c052);
 	}
 
@@ -90,6 +100,6 @@ class NormalBallTest {
 	
 	@Test
 	void testGetColor() {
-		assertEquals(Color.yellow, b1.getColor());
+		assertEquals(Color.red, b1.getColor());
 	}
 }

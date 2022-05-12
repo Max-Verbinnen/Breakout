@@ -1,7 +1,9 @@
 package radioactivity;
 
 import java.awt.Color;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import breakout.BreakoutState;
 import utils.Circle;
@@ -19,6 +21,9 @@ public abstract class Ball {
 
 	protected Circle location;
 	protected Vector velocity;
+	
+	int eCharge;
+	Set<Alpha> linkedAlphas;
 
 	/**
 	 * Construct a new ball at a given `location`, with a given `velocity`.
@@ -31,6 +36,8 @@ public abstract class Ball {
 	public Ball(Circle location, Vector velocity) {
 		this.location = location;
 		this.velocity = velocity;
+		linkedAlphas = new HashSet<Alpha>();
+		calculateEcharge();
 	}
 
 	/**
@@ -39,12 +46,54 @@ public abstract class Ball {
 	public Circle getLocation() {
 		return location;
 	}
+	
+	public void setLocation(Circle location) {
+		this.location = location;
+	}
 
 	/**
 	 * Return this ball's velocity.
 	 */
 	public Vector getVelocity() {
 		return velocity;
+	}
+	
+	public void setVelocity(Vector velocity) {
+		this.velocity = velocity;
+	}
+	
+	public int getEcharge() {
+		return eCharge;
+	}
+	
+	public Set<Alpha> getAlphas() {
+		return Set.copyOf(linkedAlphas);
+	}
+	
+	private void calculateEcharge() {
+		int charge = 1;
+		for (Alpha a : linkedAlphas) {
+			charge = Math.max(charge, a.linkedBalls.size());
+		}
+		if (linkedAlphas.size() % 2 != 0) charge *= -1;
+		eCharge = charge;
+	}
+	
+	public void linkTo(Alpha a) {
+		linkedAlphas.add(a);
+		a.linkedBalls.add(this);
+		for (Ball b : a.linkedBalls) {
+			b.calculateEcharge();
+		}
+	}
+	
+	public void unLink(Alpha a) {
+		linkedAlphas.remove(a);
+		a.linkedBalls.remove(this);
+		for (Ball b : a.linkedBalls) {
+			b.calculateEcharge();
+		}
+		calculateEcharge();
 	}
 
 	/**
@@ -161,8 +210,7 @@ public abstract class Ball {
 		return cloneWithVelocity(getVelocity());
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
+	public boolean equalsContent(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

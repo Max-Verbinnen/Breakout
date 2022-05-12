@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import radioactivity.Ball;
-import radioactivity.NormalBall;
 import utils.Circle;
 import utils.Point;
 import utils.Rect;
