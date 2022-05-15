@@ -58,7 +58,6 @@ class SubmissionTest3 {
 		BlockState tlBlock = fac.createNormalBlockState(origin, new Point(5000, 3750));
 		PaddleState paddle = fac.createNormalPaddleState(defPoint.plus(new Vector(10000,10000)));
 		
-		
 		BreakoutState state = fac.createBreakoutState(
 				new Alpha[] {alpha}, new Ball[] {ball}, new BlockState[] {tlBlock}, BR, paddle);
 		fac.tickDuring(state, 50000); //the ball and the alpha disappear below the bot line.

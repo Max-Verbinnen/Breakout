@@ -2,10 +2,10 @@ package radioactivity;
 
 import java.awt.Color;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import breakout.BreakoutState;
+import logicalcollections.LogicalSet;
 import utils.Circle;
 import utils.Point;
 import utils.Rect;
@@ -16,22 +16,50 @@ import utils.Vector;
  * 
  * @invar | getLocation() != null
  * @invar | getVelocity() != null
+ * 
+ * @invar | getAlphas() != null
+ * @invar | getAlphas().stream().allMatch(a -> a != null)
+ * @invar | getAlphas().stream().allMatch(a -> a.getBalls().contains(this))
+ * 
+ * @invar | getEcharge() != 0
+ * @invar | (getAlphas().size() % 2 == 0) ? getEcharge() > 0 : getEcharge() < 0
+ * @invar | Math.abs(getEcharge()) == ((getAlphas().isEmpty()) ? 1 : getAlphas().stream().mapToInt(a -> a.getBalls().size()).max().getAsInt())
  */
 public abstract class Ball {
 
+	/**
+	 * @invar | location() != null
+	 * @invar | velocity() != null
+	 */
 	protected Circle location;
 	protected Vector velocity;
 	
-	int eCharge;
+	/**
+	 * @invar | linkedAlphas != null
+	 * @invar | linkedAlphas.stream().allMatch(a -> a != null)
+	 * @invar | linkedAlphas.stream().allMatch(a -> a.linkedBalls.contains(this)) // a.linkedBalls is not null, because that ball invariant has been checked in a previous 'phase'
+	 * 
+	 * @representationObject
+	 * @peerObjects
+	 */
 	Set<Alpha> linkedAlphas;
+	
+	/**
+	 * @invar | eCharge != 0
+	 * @invar | (linkedAlphas.size() % 2 == 0) ? eCharge > 0 : eCharge < 0
+	 * @invar | Math.abs(eCharge) == ((linkedAlphas.isEmpty()) ? 1 : linkedAlphas.stream().mapToInt(a -> a.linkedBalls.size()).max().getAsInt())
+	 */
+	int eCharge;
 
 	/**
 	 * Construct a new ball at a given `location`, with a given `velocity`.
 	 * 
 	 * @pre | location != null
 	 * @pre | velocity != null
+	 * 
 	 * @post | getLocation().equals(location)
 	 * @post | getVelocity().equals(velocity)
+	 * @post | getAlphas().isEmpty()
 	 */
 	public Ball(Circle location, Vector velocity) {
 		this.location = location;
@@ -42,30 +70,64 @@ public abstract class Ball {
 
 	/**
 	 * Return this ball's location.
+	 * 
+	 * @inspects | this
 	 */
 	public Circle getLocation() {
 		return location;
 	}
 	
+	/**
+	 * Set this ball's location.
+	 * 
+	 * @pre | location != null
+	 * @post | getLocation() == location
+	 * 
+	 * @mutates | this
+	 */
 	public void setLocation(Circle location) {
 		this.location = location;
 	}
 
 	/**
 	 * Return this ball's velocity.
+	 * 
+	 * @inspects | this
 	 */
 	public Vector getVelocity() {
 		return velocity;
 	}
 	
+	/**
+	 * Set this ball's velocity.
+	 * 
+	 * @pre | velocity != null
+	 * @post | getVelocity() == velocity
+	 * 
+	 * @mutates | this
+	 */
 	public void setVelocity(Vector velocity) {
 		this.velocity = velocity;
 	}
 	
+	/**
+	 * Return this ball's electric charge.
+	 * 
+	 * @inspects | this
+	 */
 	public int getEcharge() {
 		return eCharge;
 	}
 	
+	/**
+	 * Return a shallow copy of the linked alpha particles.
+	 * 
+	 * @post | result != null
+	 * 
+	 * @inspects | this
+	 * @creates | result
+	 * @peerObjects
+	 */
 	public Set<Alpha> getAlphas() {
 		return Set.copyOf(linkedAlphas);
 	}
@@ -79,6 +141,16 @@ public abstract class Ball {
 		eCharge = charge;
 	}
 	
+	/**
+	 * Link alpha particle `a` to this ball.
+	 * 
+	 * @pre | a != null
+	 * 
+	 * @post | getAlphas().equals(LogicalSet.plus(old(getAlphas()), a))
+	 * @post | a.getBalls().equals(LogicalSet.plus(old(a.getBalls()), this))
+	 * 
+	 * @mutates_properties | getAlphas(), a.getBalls()
+	 */
 	public void linkTo(Alpha a) {
 		linkedAlphas.add(a);
 		a.linkedBalls.add(this);
@@ -87,6 +159,16 @@ public abstract class Ball {
 		}
 	}
 	
+	/**
+	 * Delete link between alpha particle `a` and this ball.
+	 * 
+	 * @pre | a != null
+	 * 
+	 * @post | getAlphas().equals(LogicalSet.minus(old(getAlphas()), a))
+	 * @post | a.getBalls().equals(LogicalSet.minus(old(a.getBalls()), this))
+	 * 
+	 * @mutates_properties | getAlphas(), a.getBalls()
+	 */
 	public void unLink(Alpha a) {
 		linkedAlphas.remove(a);
 		a.linkedBalls.remove(this);
@@ -104,7 +186,8 @@ public abstract class Ball {
 	 * @post | (rect.collideWith(getLocation()) == null && result == null) ||
 	 *       | (rect.collideWith(getLocation()) != null && getVelocity().product(rect.collideWith(getLocation())) <= 0 && result == null) ||
 	 *       | (rect.collideWith(getLocation()) != null && result.equals(getVelocity().mirrorOver(rect.collideWith(getLocation()))))
-	 * @inspects this
+	 * 
+	 * @inspects | this
 	 */
 	public Vector bounceOn(Rect rect) {
 		Vector coldir = rect.collideWith(location);
@@ -120,7 +203,7 @@ public abstract class Ball {
 	 * @pre | rect != null
 	 * @post | result == ((rect.collideWith(getLocation()) != null) &&
 	 *       |            (getVelocity().product(rect.collideWith(getLocation())) > 0))
-	 * @inspects this
+	 * @inspects | this
 	 */
 	public boolean collidesWith(Rect rect) {
 		Vector coldir = rect.collideWith(getLocation());
@@ -133,9 +216,11 @@ public abstract class Ball {
 	 * @pre | v != null
 	 * @pre | elapsedTime >= 0
 	 * @pre | elapsedTime <= BreakoutState.MAX_ELAPSED_TIME
+	 * 
 	 * @post | getLocation().getCenter().equals(old(getLocation()).getCenter().plus(v))
 	 * @post | getLocation().getDiameter() == old(getLocation()).getDiameter()
-	 * @mutates this
+	 * 
+	 * @mutates | this
 	 */
 	public abstract void move(Vector v, int elapsedTime);
 
@@ -144,8 +229,10 @@ public abstract class Ball {
 	 * 
 	 * @pre | rect != null
 	 * @pre | collidesWith(rect)
+	 * 
 	 * @post | getLocation().equals(old(getLocation()))
-	 * @mutates this
+	 * 
+	 * @mutates | this
 	 */
 	public abstract void hitBlock(Rect rect, boolean destroyed);
 
@@ -155,8 +242,10 @@ public abstract class Ball {
 	 * @pre | rect != null
 	 * @pre | collidesWith(rect)
 	 * @pre | paddleVel != null
+	 * 
 	 * @post | getLocation().equals(old(getLocation()))
-	 * @mutates this
+	 * 
+	 * @mutates | this
 	 */
 	public abstract void hitPaddle(Rect rect, Vector paddleVel);
 
@@ -165,8 +254,10 @@ public abstract class Ball {
 	 * 
 	 * @pre | rect != null
 	 * @pre | collidesWith(rect)
+	 * 
 	 * @post | getLocation().equals(old(getLocation()))
-	 * @mutates this
+	 * 
+	 * @mutates | this
 	 */
 	public abstract void hitWall(Rect rect);
 
@@ -174,7 +265,7 @@ public abstract class Ball {
 	 * Return the color this ball should be painted in.
 	 * 
 	 * @post | result != null
-	 * @inspects this
+	 * @inspects | this
 	 */
 	public abstract Color getColor();
 	
@@ -182,7 +273,7 @@ public abstract class Ball {
 	 * Return this point's center.
 	 * 
 	 * @post | getLocation().getCenter().equals(result)
-	 * @inspects this
+	 * @inspects | this
 	 */
 	public Point getCenter() {
 		return getLocation().getCenter();
@@ -191,25 +282,30 @@ public abstract class Ball {
 	/**
 	 * Return a clone of this BallState with the given velocity.
 	 * 
-	 * @inspects this
-	 * @creates result
 	 * @post | result.getLocation().equals(getLocation())
 	 * @post | result.getVelocity().equals(v)
+	 * 
+	 * @inspects | this
+	 * @creates | result
 	 */
 	public abstract Ball cloneWithVelocity(Vector v);
 	
 	/**
-	 * Return a clone of this BallState.
+	 * Return a clone of this ball.
 	 * 
-	 * @inspects this
-	 * @creates result
 	 * @post | result.getLocation().equals(getLocation())
 	 * @post | result.getVelocity().equals(getVelocity())
+	 * 
+	 * @inspects | this
+	 * @creates | result
 	 */
 	public Ball clone() {
 		return cloneWithVelocity(getVelocity());
 	}
 	
+	/**
+	 * Check if two balls are equal based on their content.
+	 */
 	public boolean equalsContent(Object obj) {
 		if (this == obj)
 			return true;
@@ -226,15 +322,5 @@ public abstract class Ball {
 			return false;
 		return true;
 	}
-	
-	/**
-	 * Careful: depends on mutable state of this object.
-	 * As a result, Balls must not be modified while they are used as key in a hash set or table. 
-	 * 
-	 * @inspects | this
-	 */
-	@Override
-	public int hashCode() {
-		return Objects.hash(location, velocity);
-	}	
+
 }

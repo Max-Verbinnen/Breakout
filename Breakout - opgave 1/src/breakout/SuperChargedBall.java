@@ -46,8 +46,10 @@ public class SuperChargedBall extends NormalBall {
 
 	@Override
 	public Color getColor() {
-		if(lifetime >= 0) {
-			return COLOR;
+		if (lifetime >= 0) {
+			float hue = (float) ((getLifetime() % 2500) / 2500.0);
+			int rgb = Color.HSBtoRGB(hue, 1, 1);
+			return new Color(rgb);
 		} else {
 			return super.getColor();
 		}

@@ -1,7 +1,9 @@
 package breakout;
 
+import java.util.stream.IntStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
 import radioactivity.Alpha;
 import radioactivity.Ball;
@@ -16,10 +18,30 @@ import utils.Vector;
  * Represents the current state of a breakout game.
  * 
  * @invar | getBalls() != null
+ * @invar | Arrays.stream(getBalls()).allMatch(b -> b != null)
+ * @invar | getAlphas() != null
+ * @invar | Arrays.stream(getAlphas()).allMatch(a -> a != null)
+ * 
+ * @invar alpha's exhaustiveness
+ * 		  | Arrays.stream(getBalls()).allMatch(ball ->
+ * 		  | 	ball.getAlphas().stream().allMatch(alpha -> Arrays.stream(getAlphas()).anyMatch(a -> a.equalsContent(alpha)))
+ * 		  | )
+ * @invar ball's exhaustiveness
+ * 		  | Arrays.stream(getAlphas()).allMatch(alpha ->
+ * 		  | 	alpha.getBalls().stream().allMatch(ball -> Arrays.stream(getBalls()).anyMatch(b -> b.equalsContent(ball)))
+ * 		  | )
+ * @invar no duplicate references in alphas
+ * 		  | getAlphas().length == Set.of(getAlphas()).size()
+ * @invar no duplicate references in balls
+ * 		  | getBalls().length == Set.of(getBalls()).size()
+ * 
  * @invar | getBlocks() != null
  * @invar | getPaddle() != null
  * @invar | getBottomRight() != null
+ * 
  * @invar | Point.ORIGIN.isUpAndLeftFrom(getBottomRight())
+ * @invar | Arrays.stream(getAlphas()).allMatch(a -> getField().contains(a.getLocation()))
+ * @invar | Arrays.stream(getBalls()).allMatch(b -> getField().contains(b.getLocation()))
  * @invar | Arrays.stream(getBlocks()).allMatch(b -> getField().contains(b.getLocation()))
  * @invar | getField().contains(getPaddle().getLocation())
  */
@@ -30,20 +52,40 @@ public class BreakoutState {
 	private static final Vector[] BALL_VEL_VARIATIONS = new Vector[] { new Vector(0, 0), new Vector(2, -2),
 			new Vector(-2, 2), new Vector(2, 2), new Vector(-2, -2) };
 	public static int MAX_ELAPSED_TIME = 50;
+
 	/**
 	 * @invar | bottomRight != null
 	 * @invar | Point.ORIGIN.isUpAndLeftFrom(bottomRight)
 	 */
 	private final Point bottomRight;
 	/**
+	 * @invar | alphas != null
+	 * @invar | Arrays.stream(alphas).allMatch(a -> a != null)
+	 * @invar | Arrays.stream(alphas).allMatch(a -> getFieldInternal().contains(a.getLocation()))
+	 * @invar alpha's exhaustiveness
+	 * 		  | Arrays.stream(balls).allMatch(ball ->
+	 * 		  | 	ball.getAlphas().stream().allMatch(alpha -> Arrays.stream(alphas).anyMatch(a -> a.equalsContent(alpha)))
+	 * 		  | )
+	 * @invar no duplicate references in alphas
+	 * 		  | alphas.length == Set.of(alphas).size()
 	 * 
+	 * @representationObject
+	 * @representationObjects
 	 */
 	private Alpha[] alphas;
 	/**
 	 * @invar | balls != null
+	 * @invar | Arrays.stream(balls).allMatch(b -> b != null)
 	 * @invar | Arrays.stream(balls).allMatch(b -> getFieldInternal().contains(b.getLocation()))
+	 * @invar ball's exhaustiveness
+	 * 		  | Arrays.stream(alphas).allMatch(alpha ->
+	 * 		  | 	alpha.getBalls().stream().allMatch(ball -> Arrays.stream(balls).anyMatch(b -> b.equalsContent(ball)))
+	 * 		  | )
+	 * @invar no duplicate references in balls
+	 * 		  | balls.length == Set.of(balls).size()
+	 * 
 	 * @representationObject
-	 * @representationObjects Each ball is a representation object
+	 * @representationObjects
 	 */
 	private Ball[] balls;
 	/**
@@ -64,24 +106,76 @@ public class BreakoutState {
 	private final Rect[] walls;
 
 	/**
-	 * Construct a new BreakoutState with the given balls, blocks, paddle.
+	 * Construct a new BreakoutState with the given alphas, balls, blocks, paddle.
 	 * 
 	 * @throws IllegalArgumentException | balls == null
+	 * @throws IllegalArgumentException | !Arrays.stream(balls).allMatch(b -> b != null)
+	 * @throws IllegalArgumentException | alphas == null
+	 * @throws IllegalArgumentException | !Arrays.stream(alphas).allMatch(a -> a != null)
+	 * 
+	 * @throws IllegalArgumentException
+	 * 		  | !Arrays.stream(balls).allMatch(ball ->
+	 * 		  | 	ball.getAlphas().stream().allMatch(alpha -> Arrays.stream(alphas).anyMatch(a -> a.equalsContent(alpha)))
+	 * 		  | )
+	 * @throws IllegalArgumentException
+	 * 		  | !Arrays.stream(alphas).allMatch(alpha ->
+	 * 		  | 	alpha.getBalls().stream().allMatch(ball -> Arrays.stream(balls).anyMatch(b -> b.equalsContent(ball)))
+	 * 		  | )
+	 * @throws IllegalArgumentExeption
+	 * 		  | alphas.length != Set.of(alphas).size()
+	 * @throws IllegalArgumentExeption
+	 * 		  | balls.length != Set.of(balls).size()
+	 * 
 	 * @throws IllegalArgumentException | blocks == null
 	 * @throws IllegalArgumentException | bottomRight == null
 	 * @throws IllegalArgumentException | paddle == null
+	 * 
 	 * @throws IllegalArgumentException | !Point.ORIGIN.isUpAndLeftFrom(bottomRight)
 	 * @throws IllegalArgumentException | !(new Rect(Point.ORIGIN,bottomRight)).contains(paddle.getLocation())
 	 * @throws IllegalArgumentException | !Arrays.stream(blocks).allMatch(b -> (new Rect(Point.ORIGIN,bottomRight)).contains(b.getLocation()))
 	 * @throws IllegalArgumentException | !Arrays.stream(balls).allMatch(b -> (new Rect(Point.ORIGIN,bottomRight)).contains(b.getLocation()))
-	 * post | Arrays.equals(getBalls(),balls)
-	 * @post | Arrays.equals(getBlocks(),blocks)
+	 * @throws IllegalArgumentException | !Arrays.stream(alphas).allMatch(a -> (new Rect(Point.ORIGIN,bottomRight)).contains(a.getLocation()))
+	 * 
+	 * @post | IntStream.range(0, balls.length).allMatch(i -> getBalls()[i].equalsContent(balls[i]))
+	 * @post | IntStream.range(0, balls.length).allMatch(i ->
+	 * 		 | 		balls[i].getAlphas().size() == getBalls()[i].getAlphas().size() &&
+	 * 		 |		balls[i].getAlphas().stream().allMatch(a -> getBalls()[i].getAlphas().stream().anyMatch(al -> a.equalsContent(al))) &&
+	 * 		 |		getBalls()[i].getAlphas().stream().allMatch(a -> balls[i].getAlphas().stream().anyMatch(al -> a.equalsContent(al)))
+	 * 		 | )
+	 * @post | IntStream.range(0, alphas.length).allMatch(i -> getAlphas()[i].equalsContent(alphas[i]))
+	 * @post | IntStream.range(0, alphas.length).allMatch(i ->
+	 * 		 | 		alphas[i].getBalls().size() == getAlphas()[i].getBalls().size() &&
+	 * 		 |		alphas[i].getBalls().stream().allMatch(b -> getAlphas()[i].getBalls().stream().anyMatch(ba -> b.equalsContent(ba))) &&
+	 * 		 |		getAlphas()[i].getBalls().stream().allMatch(b -> alphas[i].getBalls().stream().anyMatch(ba -> b.equalsContent(ba)))
+	 * 		 | )
+	 * @post | Arrays.equals(getBlocks(), blocks)
 	 * @post | getBottomRight().equals(bottomRight)
 	 * @post | getPaddle().equals(paddle)
 	 */
 	public BreakoutState(Alpha[] alphas, Ball[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
 		if (balls == null)
 			throw new IllegalArgumentException();
+		if (!Arrays.stream(balls).allMatch(b -> b != null)) {
+			throw new IllegalArgumentException();
+		}
+		if (alphas == null)
+			throw new IllegalArgumentException();
+		if (!Arrays.stream(alphas).allMatch(a -> a != null)) {
+			throw new IllegalArgumentException();
+		}
+		if (!Arrays.stream(balls).allMatch(ball -> ball.getAlphas().stream().allMatch(alpha -> Arrays.stream(alphas).anyMatch(a -> a.equalsContent(alpha))))) {
+			throw new IllegalArgumentException();
+		}
+		if (!Arrays.stream(alphas).allMatch(alpha -> alpha.getBalls().stream().allMatch(ball -> Arrays.stream(balls).anyMatch(b -> b.equalsContent(ball))))) {
+			throw new IllegalArgumentException();
+		}
+		if (alphas.length != Set.of(alphas).size()) {
+			throw new IllegalArgumentException();
+		}
+		if (balls.length != Set.of(balls).size()) {
+			throw new IllegalArgumentException();
+		}
+
 		if (blocks == null)
 			throw new IllegalArgumentException();
 		if (bottomRight == null)
@@ -98,10 +192,13 @@ public class BreakoutState {
 			throw new IllegalArgumentException();
 		if (!Arrays.stream(balls).allMatch(b -> getFieldInternal().contains(b.getLocation())))
 			throw new IllegalArgumentException();
+		if (!Arrays.stream(alphas).allMatch(a -> getFieldInternal().contains(a.getLocation())))
+			throw new IllegalArgumentException();
 
 		// balls.clone() does a shallow copy by default
-		this.alphas = fullCopyAlphas(alphas, balls);
-		this.balls = fullCopyBalls(alphas, balls);
+		Object[] copies = fullCopy(alphas, balls);
+		this.alphas = (Alpha[])copies[0];
+		this.balls = (Ball[])copies[1];
 		this.blocks = blocks.clone();
 		this.paddle = paddle;
 
@@ -112,7 +209,7 @@ public class BreakoutState {
 		this.walls = new Rect[] { topWall, rightWall, leftWall };
 	}
 	
-	private Alpha[] fullCopyAlphas(Alpha[] alphaArray, Ball[] ballArray) {
+	private Object[] fullCopy(Alpha[] alphaArray, Ball[] ballArray) {
 		Alpha[] alphasCopy = new Alpha[alphaArray.length];
 		for (int i = 0 ; i < alphaArray.length ; i++) {
 			alphasCopy[i] = alphaArray[i].clone();
@@ -122,51 +219,38 @@ public class BreakoutState {
 			ballsCopy[i] = ballArray[i].clone();
 			for (Alpha a : ballArray[i].getAlphas()) {
 				for (int j = 0 ; j < alphaArray.length ; j++) {
-					if (a == alphaArray[j]) ballsCopy[i].linkTo(alphasCopy[j]);
+					if (a.equalsContent(alphaArray[j])) ballsCopy[i].linkTo(alphasCopy[j]);
 				}
 			}
 		}
 		
-		return alphasCopy;
+		return new Object[] {alphasCopy, ballsCopy};
 	}
 	
-	private Ball[] fullCopyBalls(Alpha[] alphaArray, Ball[] ballArray) {
-		Alpha[] alphasCopy = new Alpha[alphaArray.length];
-		for (int i = 0 ; i < alphaArray.length ; i++) {
-			alphasCopy[i] = alphaArray[i].clone();
-		}
-		Ball[] ballsCopy = new Ball[ballArray.length];
-		for (int i = 0 ; i < ballArray.length ; i++) {
-			ballsCopy[i] = ballArray[i].clone();
-			for (Alpha a : ballArray[i].getAlphas()) {
-				for (int j = 0 ; j < alphaArray.length ; j++) {
-					if (a == alphaArray[j]) ballsCopy[i].linkTo(alphasCopy[j]);
-				}
-			}
-		}
-		
-		return ballsCopy;
-	}
-	
-	public Alpha[]  getAlphas() {
-		return fullCopyAlphas(alphas, balls);
+	/**
+	 * Return the alphas of this BreakoutState.
+	 *
+	 * @creates | result
+     * @creates | ...result
+	 */
+	public Alpha[] getAlphas() {
+		return (Alpha[])fullCopy(alphas, balls)[0];
 	}
 
 	/**
 	 * Return the balls of this BreakoutState.
 	 *
-	 * @creates result
-     * @creates ...result
+	 * @creates | result
+     * @creates | ...result
 	 */
 	public Ball[] getBalls() {
-		return fullCopyBalls(alphas, balls);
-//		return balls.clone();
+		return (Ball[])fullCopy(alphas, balls)[1];
 	}
 
 	/**
 	 * Return the blocks of this BreakoutState.
 	 *
-	 * @creates result
+	 * @creates | result
 	 */
 	public BlockState[] getBlocks() {
 		return blocks.clone();
@@ -224,15 +308,16 @@ public class BreakoutState {
 	}
 
 	private Ball removeDead(Ball ball) {
-		if( ball.getLocation().getBottommostPoint().getY() > bottomRight.getY()) { return null; }
+		if (ball.getLocation().getBottommostPoint().getY() > bottomRight.getY()) {
+			ball.getAlphas().forEach(a -> ball.unLink(a));
+			return null;
+		}
 		else { return ball; }
 	}
 	
 	private Alpha removeDead(Alpha alpha) {
-		if( alpha.getLocation().getBottommostPoint().getY() > bottomRight.getY()) { 
-			for (Ball b : alpha.getBalls()) {
-				b.unLink(alpha);
-			}
+		if (alpha.getLocation().getBottommostPoint().getY() > bottomRight.getY()) { 
+			alpha.getBalls().forEach(b -> b.unLink(alpha));
 			return null; 
 		}
 		else { return alpha; }
@@ -242,6 +327,7 @@ public class BreakoutState {
 		Circle loc = getFieldInternal().constrain(b.getLocation());
 	    b.move(loc.getCenter().minus(b.getLocation().getCenter()),0);
 	}
+
 	private void clampAlpha(Alpha a) {
 		Circle loc = getFieldInternal().constrain(a.getLocation());
 	    a.move(loc.getCenter().minus(a.getLocation().getCenter()));
@@ -253,7 +339,17 @@ public class BreakoutState {
 				boolean destroyed = hitBlock(block);
 				ball.hitBlock(block.getLocation(), destroyed);
 				paddle = block.paddleStateAfterHit(paddle);
-				return block.ballStateAfterHit(ball);
+				Ball newBall = block.ballStateAfterHit(ball);
+				
+				// When ball becomes supercharged, we need to manually update the links
+				if (newBall != ball) {
+					for (Alpha a: ball.getAlphas()) {
+						newBall.linkTo(a);
+						ball.unLink(a);
+					}
+				}
+				
+				return newBall;
 			}
 		}
 		return ball;

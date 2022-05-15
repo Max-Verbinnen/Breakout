@@ -100,6 +100,6 @@ class SuperChargedBallTest {
 	
 	@Test
 	void testGetColor() {
-		assertEquals(Color.red, b1.getColor());
+		assertEquals(new Color(Color.HSBtoRGB((float)0.4, 1, 1)), b1.getColor());
 	}
 }
