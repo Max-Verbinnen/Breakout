@@ -7,6 +7,7 @@ import java.awt.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import radioactivity.Alpha;
 import radioactivity.Ball;
 import utils.Circle;
 import utils.Point;
@@ -47,6 +48,16 @@ class NormalBallTest {
 		assertEquals(p05, b1.getLocation().getCenter());
 		assertEquals(2, b1.getLocation().getDiameter());
 		assertEquals(v1010, b1.getVelocity());
+	}
+	
+	@Test
+	void testLink() {
+		Alpha a = new Alpha(new Circle(new Point(10, 10), 5), new Vector(3, 3));
+		Ball b2 = b1.clone();
+		b1.linkTo(a);
+		b2.linkTo(a);
+		b1.unLink(a);
+		assertEquals(b2.getEcharge(), -1);
 	}
 
 	@Test
@@ -93,4 +104,16 @@ class NormalBallTest {
 	void testGetColor() {
 		assertEquals(Color.yellow, b1.getColor());
 	}
+	
+	@Test
+	void equalsContent() {
+		assertEquals(true, b1.equalsContent(new NormalBall(b1.getLocation(), b1.getVelocity())));
+		assertEquals(true, b1.equalsContent(b1));
+		assertEquals(false, b1.equalsContent(null));
+		assertEquals(false, b1.equalsContent(c052));
+		assertEquals(false, b1.equalsContent(new NormalBall(b1.getLocation(), b1.getVelocity().plus(new Vector(1, 1)))));
+		assertEquals(false, b1.equalsContent(new NormalBall(new Circle(b1.getLocation().getCenter(), b1.getLocation().getDiameter() + 1), b1.getVelocity())));
+		assertEquals(false, b1.equalsContent(new NormalBall(new Circle(new Point(42, 6), b1.getLocation().getDiameter()), b1.getVelocity())));
+	}
+
 }

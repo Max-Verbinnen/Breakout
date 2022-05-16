@@ -7,6 +7,7 @@ import java.awt.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import radioactivity.Alpha;
 import radioactivity.Ball;
 import utils.Circle;
 import utils.Point;
@@ -46,14 +47,26 @@ class SuperChargedBallTest {
 
 	@Test
 	void testBall() {
-		assertEquals(p05, b1.getLocation().getCenter());
+		assertEquals(p05, b1.getCenter());
 		assertEquals(2, b1.getLocation().getDiameter());
 		assertEquals(v1010, b1.getVelocity());
+		
+		b1.setLocation(c389);
+		assertEquals(c389, b1.getLocation());
+		b1.setVelocity(new Vector(3, 3));
+		assertEquals(new Vector(3, 3), b1.getVelocity());
+	}
+	
+	@Test
+	void testGetEcharge() {
+		assertEquals(b1.getEcharge(), 1);
 	}
 
 	@Test
 	void testBounceOn() {
 		assertEquals(new Vector(-10, 10), b1.bounceOn(r1138));
+		Vector res = b1.bounceOn(new Rect(new Point(1000, 1000), new Point(1001, 1001)));
+		assertEquals(res, null);
 	}
 
 	@Test
@@ -102,4 +115,5 @@ class SuperChargedBallTest {
 	void testGetColor() {
 		assertEquals(new Color(Color.HSBtoRGB((float)0.4, 1, 1)), b1.getColor());
 	}
+
 }
