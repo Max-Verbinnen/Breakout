@@ -46,6 +46,13 @@ import utils.Vector;
  * @invar | getField().contains(getPaddle().getLocation())
  */
 public class BreakoutState {
+	
+	private class BalphaContainer {
+		public Alpha[] alphas;
+		public Ball[] balls;
+		
+		BalphaContainer(Alpha[] alphas, Ball[] balls) { this.alphas = alphas; this.balls = balls; }
+	}
 
 	private static final Vector PADDLE_VEL = new Vector(20, 0);
 	public static final int MAX_BALL_REPLICATE = 5;
@@ -196,9 +203,9 @@ public class BreakoutState {
 			throw new IllegalArgumentException();
 
 		// balls.clone() does a shallow copy by default
-		Object[] copies = fullCopy(alphas, balls);
-		this.alphas = (Alpha[])copies[0];
-		this.balls = (Ball[])copies[1];
+		BalphaContainer copy = fullCopy(alphas, balls);
+		this.alphas = copy.alphas;
+		this.balls = copy.balls;
 		this.blocks = blocks.clone();
 		this.paddle = paddle;
 
@@ -209,7 +216,7 @@ public class BreakoutState {
 		this.walls = new Rect[] { topWall, rightWall, leftWall };
 	}
 	
-	private Object[] fullCopy(Alpha[] alphaArray, Ball[] ballArray) {
+	private BalphaContainer fullCopy(Alpha[] alphaArray, Ball[] ballArray) {
 		Alpha[] alphasCopy = new Alpha[alphaArray.length];
 		for (int i = 0 ; i < alphaArray.length ; i++) {
 			alphasCopy[i] = alphaArray[i].clone();
@@ -219,32 +226,34 @@ public class BreakoutState {
 			ballsCopy[i] = ballArray[i].clone();
 			for (Alpha a : ballArray[i].getAlphas()) {
 				for (int j = 0 ; j < alphaArray.length ; j++) {
-					if (a.equalsContent(alphaArray[j])) ballsCopy[i].linkTo(alphasCopy[j]);
+					if (a == alphaArray[j]) ballsCopy[i].linkTo(alphasCopy[j]);
 				}
 			}
 		}
 		
-		return new Object[] {alphasCopy, ballsCopy};
+		return new BalphaContainer(alphasCopy, ballsCopy);
 	}
 	
 	/**
 	 * Return the alphas of this BreakoutState.
 	 *
+	 * @inspects | this
 	 * @creates | result
      * @creates | ...result
 	 */
 	public Alpha[] getAlphas() {
-		return (Alpha[])fullCopy(alphas, balls)[0];
+		return fullCopy(alphas, balls).alphas;
 	}
 
 	/**
 	 * Return the balls of this BreakoutState.
 	 *
+	 * @inspects | this
 	 * @creates | result
      * @creates | ...result
 	 */
 	public Ball[] getBalls() {
-		return (Ball[])fullCopy(alphas, balls)[1];
+		return fullCopy(alphas, balls).balls;
 	}
 
 	/**
@@ -376,8 +385,8 @@ public class BreakoutState {
 	/**
 	 * Move all moving objects one step forward.
 	 * 
-	 * @mutates this
-	 * @mutates ...getBalls()
+	 * @mutates | this
+	 * @mutates | ...getBalls()
 	 * @pre | elapsedTime >= 0
 	 * @pre | elapsedTime <= MAX_ELAPSED_TIME
 	 */
@@ -407,7 +416,6 @@ public class BreakoutState {
 
 	private void collideBallPaddle(Ball ball, Vector paddleVel) {
 		if (ball.collidesWith(paddle.getLocation())) {
-			paddle = paddle.stateAfterHit();
 			ball.hitPaddle(paddle.getLocation(),paddleVel);
 			
 			Alpha newAlpha = new Alpha(ball.getLocation(), ball.getVelocity().plus(BALL_VEL_VARIATIONS[4]));
@@ -431,6 +439,8 @@ public class BreakoutState {
 					balls[curballs.length + i -1] = ball.cloneWithVelocity(nballVel);					
 				}
 			}
+
+			paddle = paddle.stateAfterHit();
 		}
 	}
 	
@@ -501,7 +511,7 @@ public class BreakoutState {
 	 * 
 	 * @param elapsedTime
 	 * 
-	 * @mutates this
+	 * @mutates | this
 	 */
 	public void movePaddleRight(int elapsedTime) {
 		paddle = paddle.move(PADDLE_VEL.scaled(elapsedTime), getField());
@@ -510,7 +520,7 @@ public class BreakoutState {
 	/**
 	 * Move the paddle left.
 	 * 
-	 * @mutates this
+	 * @mutates | this
 	 */
 	public void movePaddleLeft(int elapsedTime) {
 		paddle = paddle.move(PADDLE_VEL.scaled(-elapsedTime), getField());
@@ -520,7 +530,7 @@ public class BreakoutState {
 	 * Return whether this BreakoutState represents a game where the player has won.
 	 * 
 	 * @post | result == (getBlocks().length == 0 && !isDead())
-	 * @inspects this
+	 * @inspects | this
 	 */
 	public boolean isWon() {
 		return getBlocks().length == 0 && !isDead();
@@ -530,7 +540,7 @@ public class BreakoutState {
 	 * Return whether this BreakoutState represents a game where the player is dead.
 	 * 
 	 * @post | result == (getBalls().length == 0)
-	 * @inspects this
+	 * @inspects | this
 	 */
 	public boolean isDead() {
 		return getBalls().length == 0;

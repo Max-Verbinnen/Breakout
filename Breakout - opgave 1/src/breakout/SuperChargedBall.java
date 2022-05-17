@@ -64,7 +64,7 @@ public class SuperChargedBall extends NormalBall {
 		if(lifetime >= 0) {
 			lifetime -= elapsedTime;
 		}
-		location = new Circle(getLocation().getCenter().plus(v), getLocation().getDiameter());
+		setLocation(new Circle(getLocation().getCenter().plus(v), getLocation().getDiameter()));
 	}
 
 	@Override

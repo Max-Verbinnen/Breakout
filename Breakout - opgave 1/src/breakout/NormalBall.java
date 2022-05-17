@@ -27,23 +27,23 @@ public class NormalBall extends Ball {
 	 */
 	@Override
 	public void hitBlock(Rect rect, boolean destroyed) {
-		velocity = bounceOn(rect);
+		setVelocity(bounceOn(rect));
 	}
 
 	@Override
 	public void move(Vector v, int elapsedTime) {
-		location = new Circle(getLocation().getCenter().plus(v), getLocation().getDiameter());
+		setLocation(new Circle(getLocation().getCenter().plus(v), getLocation().getDiameter()));
 	}
 
 	@Override
 	public void hitPaddle(Rect rect, Vector paddleVel) {
 		Vector nspeed = bounceOn(rect);
-		velocity = nspeed.plus(paddleVel.scaledDiv(5));
+		setVelocity(nspeed.plus(paddleVel.scaledDiv(5)));
 	}
 
 	@Override
 	public void hitWall(Rect rect) {
-		velocity = bounceOn(rect);
+		setVelocity(bounceOn(rect));
 	}
 
 	@Override

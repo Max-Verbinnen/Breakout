@@ -18,14 +18,7 @@ import utils.Vector;
  * @invar | getBalls().stream().allMatch(b -> b != null)
  * @invar | getBalls().stream().allMatch(b -> b.getAlphas().contains(this))
  */
-public class Alpha {
-
-	/**
-	 * @invar | location != null
-	 * @invar | velocity != null
-	 */
-	private Circle location;
-	private Vector velocity;
+public class Alpha extends Balpha {
 	
 	/**
 	 * @invar | linkedBalls != null
@@ -48,51 +41,8 @@ public class Alpha {
 	 * @post | getBalls().isEmpty()
 	 */
 	public Alpha(Circle location, Vector velocity) {
-		this.location = location;
-		this.velocity = velocity;
+		super(location, velocity);
 		linkedBalls = new HashSet<Ball>();
-	}
-	
-	/**
-	 * Return this alpha's location.
-	 * 
-	 * @inspects | this
-	 */
-	public Circle getLocation() {
-		return location;
-	}
-	
-	/**
-	 * Set this alpha's location.
-	 * 
-	 * @pre | location != null
-	 * @post | getLocation() == location
-	 * 
-	 * @mutates | this
-	 */
-	public void setLocation(Circle location) {
-		this.location = location;
-	}
-
-	/**
-	 * Return this alpha's velocity.
-	 * 
-	 * @inspects | this
-	 */
-	public Vector getVelocity() {
-		return velocity;
-	}
-
-	/**
-	 * Set this alpha's velocity.
-	 * 
-	 * @pre | velocity != null
-	 * @post | getVelocity() == velocity
-	 * 
-	 * @mutates | this
-	 */
-	public void setVelocity(Vector velocity) {
-		this.velocity = velocity;
 	}
 
 	/**
@@ -109,17 +59,17 @@ public class Alpha {
 	}
 	
 	/**
-	 * Move this BallState by the given vector.
+	 * Move this alpha by the given vector.
 	 * 
 	 * @pre | v != null
 	 * 
 	 * @post | getLocation().getCenter().equals(old(getLocation()).getCenter().plus(v))
 	 * @post | getLocation().getDiameter() == old(getLocation()).getDiameter()
 	 * 
-	 * @mutates | this
+	 * @mutates_properties | getLocation()
 	 */
 	public void move(Vector v) {
-		location = new Circle(getLocation().getCenter().plus(v), getLocation().getDiameter());
+		setLocation(new Circle(getLocation().getCenter().plus(v), getLocation().getDiameter()));
 	}
 	
 	/**
@@ -132,7 +82,7 @@ public class Alpha {
 	 * @creates | result
 	 */
 	public Alpha clone() {
-		return new Alpha(location, velocity);
+		return new Alpha(getLocation(), getVelocity());
 	}
 	
 	/**
@@ -148,80 +98,31 @@ public class Alpha {
 	}
 	
 	/**
-	 * Check whether this alpha collides with a given `rect`.
-	 * 
-	 * @pre | rect != null
-	 * @post | result == ((rect.collideWith(getLocation()) != null) &&
-	 *       |            (getVelocity().product(rect.collideWith(getLocation())) > 0))
-	 * @inspects this
-	 */
-	public boolean collidesWith(Rect rect) {
-		Vector coldir = rect.collideWith(getLocation());
-		return coldir != null && (getVelocity().product(coldir) > 0);
-	}
-	
-	/**
-	 * Update the Alpha after hitting a wall at a given location.
+	 * Update the alpha after hitting a wall at a given location.
 	 * 
 	 * @pre | rect != null
 	 * @pre | collidesWith(rect)
 	 * @post | getLocation().equals(old(getLocation()))
-	 * @mutates this
+	 * 
+	 * @mutates_properties | getVelocity()
 	 */
 	public void hitWall(Rect rect) {
-		velocity = bounceOn(rect);
+		setVelocity(bounceOn(rect));
 	}
 	
 	/**
-	 * Check whether this alpha collides with a given `rect` and if so, return the
-	 * new velocity this ball will have after bouncing on the given rect.
-	 * 
-	 * @pre | rect != null
-	 * @post | (rect.collideWith(getLocation()) == null && result == null) ||
-	 *       | (rect.collideWith(getLocation()) != null && getVelocity().product(rect.collideWith(getLocation())) <= 0 && result == null) ||
-	 *       | (rect.collideWith(getLocation()) != null && result.equals(getVelocity().mirrorOver(rect.collideWith(getLocation()))))
-	 * @inspects this
-	 */
-	public Vector bounceOn(Rect rect) {
-		Vector coldir = rect.collideWith(location);
-		if (coldir != null && velocity.product(coldir) > 0) {
-			return velocity.mirrorOver(coldir);
-		}
-		return null;
-	}
-	
-	/**
-	 * Update the Alpha after hitting a paddle at a given location.
+	 * Update the alpha after hitting a paddle at a given location.
 	 * 
 	 * @pre | rect != null
 	 * @pre | collidesWith(rect)
 	 * @pre | paddleVel != null
 	 * @post | getLocation().equals(old(getLocation()))
-	 * @mutates this
+	 * 
+	 * @mutates_properties | getVelocity()
 	 */
 	public void hitPaddle(Rect rect, Vector paddleVel) {
 		Vector nspeed = bounceOn(rect);
-		velocity = nspeed.plus(paddleVel.scaledDiv(5));
-	}
-	
-	/**
-	 * Check if two alphas are equal based on their content.
-	 */
-	public boolean equalsContent(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Alpha other = (Alpha) obj;
-		if (!getVelocity().equals(other.getVelocity()))
-			return false;
-		if (!getLocation().getCenter().equals(other.getLocation().getCenter()))
-			return false;
-		if (getLocation().getDiameter() != other.getLocation().getDiameter())
-			return false;
-		return true;
+		setVelocity(nspeed.plus(paddleVel.scaledDiv(5)));
 	}
 
 }

@@ -25,14 +25,7 @@ import utils.Vector;
  * @invar | (getAlphas().size() % 2 == 0) ? getEcharge() > 0 : getEcharge() < 0
  * @invar | Math.abs(getEcharge()) == ((getAlphas().isEmpty()) ? 1 : getAlphas().stream().mapToInt(a -> a.getBalls().size()).max().getAsInt())
  */
-public abstract class Ball {
-
-	/**
-	 * @invar | location() != null
-	 * @invar | velocity() != null
-	 */
-	protected Circle location;
-	protected Vector velocity;
+public abstract class Ball extends Balpha {
 	
 	/**
 	 * @invar | linkedAlphas != null
@@ -62,52 +55,9 @@ public abstract class Ball {
 	 * @post | getAlphas().isEmpty()
 	 */
 	public Ball(Circle location, Vector velocity) {
-		this.location = location;
-		this.velocity = velocity;
+		super(location, velocity);
 		linkedAlphas = new HashSet<Alpha>();
 		calculateEcharge();
-	}
-
-	/**
-	 * Return this ball's location.
-	 * 
-	 * @inspects | this
-	 */
-	public Circle getLocation() {
-		return location;
-	}
-	
-	/**
-	 * Set this ball's location.
-	 * 
-	 * @pre | location != null
-	 * @post | getLocation() == location
-	 * 
-	 * @mutates | this
-	 */
-	public void setLocation(Circle location) {
-		this.location = location;
-	}
-
-	/**
-	 * Return this ball's velocity.
-	 * 
-	 * @inspects | this
-	 */
-	public Vector getVelocity() {
-		return velocity;
-	}
-	
-	/**
-	 * Set this ball's velocity.
-	 * 
-	 * @pre | velocity != null
-	 * @post | getVelocity() == velocity
-	 * 
-	 * @mutates | this
-	 */
-	public void setVelocity(Vector velocity) {
-		this.velocity = velocity;
 	}
 	
 	/**
@@ -179,39 +129,7 @@ public abstract class Ball {
 	}
 
 	/**
-	 * Check whether this ball collides with a given `rect` and if so, return the
-	 * new velocity this ball will have after bouncing on the given rect.
-	 * 
-	 * @pre | rect != null
-	 * @post | (rect.collideWith(getLocation()) == null && result == null) ||
-	 *       | (rect.collideWith(getLocation()) != null && getVelocity().product(rect.collideWith(getLocation())) <= 0 && result == null) ||
-	 *       | (rect.collideWith(getLocation()) != null && result.equals(getVelocity().mirrorOver(rect.collideWith(getLocation()))))
-	 * 
-	 * @inspects | this
-	 */
-	public Vector bounceOn(Rect rect) {
-		Vector coldir = rect.collideWith(location);
-		if (coldir != null && velocity.product(coldir) > 0) {
-			return velocity.mirrorOver(coldir);
-		}
-		return null;
-	}
-
-	/**
-	 * Check whether this ball collides with a given `rect`.
-	 * 
-	 * @pre | rect != null
-	 * @post | result == ((rect.collideWith(getLocation()) != null) &&
-	 *       |            (getVelocity().product(rect.collideWith(getLocation())) > 0))
-	 * @inspects | this
-	 */
-	public boolean collidesWith(Rect rect) {
-		Vector coldir = rect.collideWith(getLocation());
-		return coldir != null && (getVelocity().product(coldir) > 0);
-	}
-
-	/**
-	 * Move this BallState by the given vector.
+	 * Move this ball by the given vector.
 	 * 
 	 * @pre | v != null
 	 * @pre | elapsedTime >= 0
@@ -220,24 +138,24 @@ public abstract class Ball {
 	 * @post | getLocation().getCenter().equals(old(getLocation()).getCenter().plus(v))
 	 * @post | getLocation().getDiameter() == old(getLocation()).getDiameter()
 	 * 
-	 * @mutates | this
+	 * @mutates_properties | getLocation()
 	 */
 	public abstract void move(Vector v, int elapsedTime);
 
 	/**
-	 * Update the BallState after hitting a block at a given location, taking into account whether the block was destroyed by the hit or not.
+	 * Update the ball after hitting a block at a given location, taking into account whether the block was destroyed by the hit or not.
 	 * 
 	 * @pre | rect != null
 	 * @pre | collidesWith(rect)
 	 * 
 	 * @post | getLocation().equals(old(getLocation()))
 	 * 
-	 * @mutates | this
+	 * @mutates_properties | getVelocity()
 	 */
 	public abstract void hitBlock(Rect rect, boolean destroyed);
 
 	/**
-	 * Update the BallState after hitting a paddle at a given location.
+	 * Update the ball after hitting a paddle at a given location.
 	 * 
 	 * @pre | rect != null
 	 * @pre | collidesWith(rect)
@@ -245,19 +163,19 @@ public abstract class Ball {
 	 * 
 	 * @post | getLocation().equals(old(getLocation()))
 	 * 
-	 * @mutates | this
+	 * @mutates_properties | getVelocity()
 	 */
 	public abstract void hitPaddle(Rect rect, Vector paddleVel);
 
 	/**
-	 * Update the BallState after hitting a wall at a given location.
+	 * Update the ball after hitting a wall at a given location.
 	 * 
 	 * @pre | rect != null
 	 * @pre | collidesWith(rect)
 	 * 
 	 * @post | getLocation().equals(old(getLocation()))
 	 * 
-	 * @mutates | this
+	 * @mutates_properties | getVelocity()
 	 */
 	public abstract void hitWall(Rect rect);
 
@@ -265,6 +183,7 @@ public abstract class Ball {
 	 * Return the color this ball should be painted in.
 	 * 
 	 * @post | result != null
+	 * 
 	 * @inspects | this
 	 */
 	public abstract Color getColor();
@@ -273,6 +192,7 @@ public abstract class Ball {
 	 * Return this point's center.
 	 * 
 	 * @post | getLocation().getCenter().equals(result)
+	 * 
 	 * @inspects | this
 	 */
 	public Point getCenter() {
@@ -305,22 +225,21 @@ public abstract class Ball {
 	
 	/**
 	 * Check if two balls are equal based on their content.
+	 * 
+	 * @post | result == (this == obj) || (
+	 * 		 | 		obj != null &&
+	 * 		 |		getClass() == obj.getClass() &&
+	 * 		 |		getVelocity().equals(((Ball)obj).getVelocity()) &&
+	 * 		 |		getLocation().getCenter().equals(((Ball)obj).getLocation().getCenter()) &&
+	 * 		 |		getLocation().getDiameter() == ((Ball)obj).getLocation().getDiameter() &&
+	 * 		 | 		((Ball)obj).getEcharge() == getEcharge()
+	 * 		 | )
+	 * 
+	 * @inspects | this, obj
 	 */
+	@Override
 	public boolean equalsContent(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Ball other = (Ball) obj;
-		if (!getVelocity().equals(other.getVelocity()))
-			return false;
-		if (!getLocation().getCenter().equals(other.getLocation().getCenter()))
-			return false;
-		if (getLocation().getDiameter() != other.getLocation().getDiameter())
-			return false;
-		return true;
+		return super.equalsContent(obj) && ((Ball)obj).getEcharge() == getEcharge();
 	}
 
 }
