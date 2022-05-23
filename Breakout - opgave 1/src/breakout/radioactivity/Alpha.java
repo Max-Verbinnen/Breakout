@@ -1,12 +1,12 @@
-package radioactivity;
+package breakout.radioactivity;
 
 import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
-import utils.Circle;
-import utils.Rect;
-import utils.Vector;
+import breakout.utils.Circle;
+import breakout.utils.Rect;
+import breakout.utils.Vector;
 
 /**
  * Represents the state of an alpha particle in the breakout game.

@@ -1,15 +1,15 @@
-package radioactivity;
+package breakout.radioactivity;
 
 import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
 import breakout.BreakoutState;
+import breakout.utils.Circle;
+import breakout.utils.Point;
+import breakout.utils.Rect;
+import breakout.utils.Vector;
 import logicalcollections.LogicalSet;
-import utils.Circle;
-import utils.Point;
-import utils.Rect;
-import utils.Vector;
 
 /**
  * Represents the state of a ball in the breakout game.

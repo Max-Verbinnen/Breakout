@@ -2,9 +2,9 @@ package breakout;
 
 import java.awt.Color;
 
-import utils.Point;
-import utils.Rect;
-import utils.Vector;
+import breakout.utils.Point;
+import breakout.utils.Rect;
+import breakout.utils.Vector;
 
 public class NormalPaddleState extends PaddleState {
 

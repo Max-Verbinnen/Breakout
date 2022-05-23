@@ -7,12 +7,12 @@ import java.awt.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import radioactivity.Alpha;
-import radioactivity.Ball;
-import utils.Circle;
-import utils.Point;
-import utils.Rect;
-import utils.Vector;
+import breakout.radioactivity.Alpha;
+import breakout.radioactivity.Ball;
+import breakout.utils.Circle;
+import breakout.utils.Point;
+import breakout.utils.Rect;
+import breakout.utils.Vector;
 
 class NormalBallTest {
 	Point p11;

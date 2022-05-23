@@ -1,8 +1,8 @@
-package radioactivity;
+package breakout.radioactivity;
 
-import utils.Vector;
-import utils.Circle;
-import utils.Rect;
+import breakout.utils.Circle;
+import breakout.utils.Rect;
+import breakout.utils.Vector;
 
 /**
  * Represents the state of a 'balpha' particle (ball or alpha).

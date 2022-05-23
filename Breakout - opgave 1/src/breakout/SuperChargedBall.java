@@ -3,10 +3,10 @@ package breakout;
 import java.awt.Color;
 //import java.util.Arrays;
 
-import radioactivity.Ball;
-import utils.Circle;
-import utils.Rect;
-import utils.Vector;
+import breakout.radioactivity.Ball;
+import breakout.utils.Circle;
+import breakout.utils.Rect;
+import breakout.utils.Vector;
 
 public class SuperChargedBall extends NormalBall {
 

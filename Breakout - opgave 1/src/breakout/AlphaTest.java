@@ -7,11 +7,11 @@ import java.awt.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import radioactivity.Alpha;
-import utils.Circle;
-import utils.Point;
-import utils.Rect;
-import utils.Vector;
+import breakout.radioactivity.Alpha;
+import breakout.utils.Circle;
+import breakout.utils.Point;
+import breakout.utils.Rect;
+import breakout.utils.Vector;
 
 class AlphaTest {
 	Circle c1;
