@@ -18,6 +18,9 @@ import java.util.Set;
 /**
  * Represents the current state of a breakout game.
  * 
+ * NOTE: Some of these invariants were only asked as representation invariants in the assignment,
+ * 		 but we left them here as public invariants aswell, as they do no harm.
+ * 
  * @invar | getBalls() != null
  * @invar | Arrays.stream(getBalls()).allMatch(b -> b != null)
  * @invar | getAlphas() != null
@@ -145,13 +148,15 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException | !Arrays.stream(alphas).allMatch(a -> (new Rect(Point.ORIGIN,bottomRight)).contains(a.getLocation()))
 	 * 
 	 * @post | IntStream.range(0, balls.length).allMatch(i -> getBalls()[i].equalsContent(balls[i]))
-	 * @post | IntStream.range(0, balls.length).allMatch(i ->
+	 * @post balls & getBalls() are deeply equal
+	 * 		 | IntStream.range(0, balls.length).allMatch(i ->
 	 * 		 | 		balls[i].getAlphas().size() == getBalls()[i].getAlphas().size() &&
 	 * 		 |		balls[i].getAlphas().stream().allMatch(a -> getBalls()[i].getAlphas().stream().anyMatch(al -> a.equalsContent(al))) &&
 	 * 		 |		getBalls()[i].getAlphas().stream().allMatch(a -> balls[i].getAlphas().stream().anyMatch(al -> a.equalsContent(al)))
 	 * 		 | )
 	 * @post | IntStream.range(0, alphas.length).allMatch(i -> getAlphas()[i].equalsContent(alphas[i]))
-	 * @post | IntStream.range(0, alphas.length).allMatch(i ->
+	 * @post alphas & getAlphas() are deeply equal
+	 * 		 | IntStream.range(0, alphas.length).allMatch(i ->
 	 * 		 | 		alphas[i].getBalls().size() == getAlphas()[i].getBalls().size() &&
 	 * 		 |		alphas[i].getBalls().stream().allMatch(b -> getAlphas()[i].getBalls().stream().anyMatch(ba -> b.equalsContent(ba))) &&
 	 * 		 |		getAlphas()[i].getBalls().stream().allMatch(b -> alphas[i].getBalls().stream().anyMatch(ba -> b.equalsContent(ba)))

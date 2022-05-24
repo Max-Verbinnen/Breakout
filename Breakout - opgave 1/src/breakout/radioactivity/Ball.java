@@ -42,7 +42,7 @@ public abstract class Ball extends Balpha {
 	 * @invar | (linkedAlphas.size() % 2 == 0) ? eCharge > 0 : eCharge < 0
 	 * @invar | Math.abs(eCharge) == ((linkedAlphas.isEmpty()) ? 1 : linkedAlphas.stream().mapToInt(a -> a.linkedBalls.size()).max().getAsInt())
 	 */
-	int eCharge;
+	private int eCharge;
 
 	/**
 	 * Construct a new ball at a given `location`, with a given `velocity`.
@@ -99,7 +99,7 @@ public abstract class Ball extends Balpha {
 	 * @post | getAlphas().equals(LogicalSet.plus(old(getAlphas()), a))
 	 * @post | a.getBalls().equals(LogicalSet.plus(old(a.getBalls()), this))
 	 * 
-	 * @mutates_properties | getAlphas(), a.getBalls()
+	 * @mutates_properties | getAlphas(), a.getBalls(), (...a.getBalls()).getEcharge()
 	 */
 	public void linkTo(Alpha a) {
 		linkedAlphas.add(a);
@@ -117,7 +117,7 @@ public abstract class Ball extends Balpha {
 	 * @post | getAlphas().equals(LogicalSet.minus(old(getAlphas()), a))
 	 * @post | a.getBalls().equals(LogicalSet.minus(old(a.getBalls()), this))
 	 * 
-	 * @mutates_properties | getAlphas(), a.getBalls()
+	 * @mutates_properties | getAlphas(), a.getBalls(), (...a.getBalls()).getEcharge(), getEcharge()
 	 */
 	public void unLink(Alpha a) {
 		linkedAlphas.remove(a);
